@@ -1,0 +1,15 @@
+{
+	"discord": {
+		"token": "",
+		"prefix": "",
+		"game": ""
+	},
+	"database": {
+		"postgres": {
+			"host": "",
+			"database": "",
+			"user": "",
+			"pass": ""
+		}
+	}
+}
