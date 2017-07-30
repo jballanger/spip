@@ -1,3 +1,4 @@
+const chalk = require('chalk');
 const read = require('readdir-recursive');
 const path = require('path');
 const requireStack = require('require-stack');
@@ -20,7 +21,7 @@ class ImportManager {
 				try {
 					imported = requireStack(file);
 				} catch (e) {
-					return console.error(`Unable to load modules from ${folderName} (${path.relative(folder, file)})\n${e}\n${e.stack}`);
+					return console.error(chalk.red(`Unable to load modules from ${folderName} (${path.relative(folder, file)})\n${e}\n${e.stack}`));
 				}
 
 				if (!this.imports[folderName]) {
@@ -30,7 +31,7 @@ class ImportManager {
 				this.imports[folderName][file] = imported;
 			});
 		} catch(e) {
-			console.error(`Unable to load modules from ${folderName}\n${e}`);
+			console.error(chalk.red(`Unable to load modules from ${folderName}\n${e}`));
 		}
 	}
 

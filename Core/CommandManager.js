@@ -1,3 +1,5 @@
+const chalk = require('chalk');
+
 class CommandManager {
 	constructor(bot) {
 		this.bot = null;
@@ -6,7 +8,9 @@ class CommandManager {
 	
 	async init(bot) {
 		this.bot = bot;
+		console.log(chalk.yellow('Loading commands..'));
 		await this.loadCommands();
+		console.log(chalk.blue(`${this.commands.length} commands loaded !`));
 	}
 
 	get(name) {
@@ -46,7 +50,7 @@ class CommandManager {
 		let error = this.validate(command);
 
 		if (error) {
-			return console.error(`Failed to load ${name}\n${error}`);
+			return console.error(chalk.red(`Failed to load ${name}\n${error}`));
 		}
 		this.commands.push(command);
 	}

@@ -1,3 +1,4 @@
+const chalk = require('chalk');
 const sequelize = require('sequelize');
 
 class Database {
@@ -13,9 +14,9 @@ class Database {
 	async authenticate() {
 		try {
 			await this.sequelize.authenticate();
-			console.log('Connected to database !');
+			console.log(chalk.green('Connected to database !'));
 		} catch (err) {
-			console.error('Failed to connect to the database, retrying in 5 seconds', err);
+			console.error(chalk.red('Failed to connect to the database, retrying in 5 seconds', err));
 			await this.sleep(5000);
 			return await this.authenticate();
 		}
