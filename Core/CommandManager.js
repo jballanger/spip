@@ -50,7 +50,7 @@ class CommandManager {
 		let error = this.validate(command);
 
 		if (error) {
-			return console.error(chalk.red(`Failed to load ${name}\n${error}`));
+			return console.error(chalk.yellow(`Failed to load ${name}\n${error}`));
 		}
 		this.commands.push(command);
 	}
