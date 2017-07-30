@@ -1,10 +1,10 @@
 {
-  "name": "discord",
+  "name": "spip",
   "version": "1.0.0",
   "description": "Discord bot",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "npm install && node index.js"
   },
   "engines": {
     "node": "8.2.1"
@@ -17,6 +17,7 @@
   "license": "ISC",
   "dependencies": {
     "bluebird": "3.5.0",
+    "chalk": "^2.0.1",
     "dateformat": "^2.0.0",
     "eris": "0.7.0",
     "eventemitter3": "2.0.3",
