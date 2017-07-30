@@ -23,6 +23,11 @@ class DiscordClient extends Eris.Client {
 		this.utils = core.Utils;
 		this.deleted = new Eris.Collection();
 	}
+
+	async init() {
+		this.editStatus('online', this.utils.game(_config.discord.game));
+		await this.database.authenticate();
+	}
 }
 
 module.exports = DiscordClient;

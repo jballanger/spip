@@ -16,9 +16,9 @@ const DiscordClient = require('./Core/DiscordClient.js');
 var bot = new DiscordClient();
 
 bot.on('ready', async () => {
+	await bot.init();
 	await bot.commands.init(bot);
-	bot.editStatus('online', bot.utils.game(_config.discord.game));
-	console.log(chalk.green(`${bot.user.username}#${bot.user.discriminator} ready !`));
+	console.log(chalk.green(`\n${bot.user.username}#${bot.user.discriminator} ready !`));
 });
 
 bot.on('messageCreate', (msg) => {

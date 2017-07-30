@@ -7,14 +7,16 @@ class Database {
 			_config.database.postgres.user,
 			_config.database.postgres.pass, {
 				host: _config.database.postgres.host,
-				dialect: 'postgres'
+				dialect: 'postgres',
+				logging: false
 			});
 	}
 
 	async authenticate() {
 		try {
+			console.log(chalk.yellow('Connecting to database..'));
 			await this.sequelize.authenticate();
-			console.log(chalk.green('Connected to database !'));
+			console.log(chalk.blue('Connected to database !'));
 		} catch (err) {
 			console.error(chalk.red(`Failed to connect to the database, retrying in 5 seconds..\n${err}`));
 			await this.sleep(5000);
