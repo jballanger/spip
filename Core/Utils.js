@@ -1,5 +1,11 @@
+const crypto = require('crypto');
+
 exports.randomColor = () => {
     return Math.floor(Math.random() * (0xFFFFFF + 1));
+}
+
+exports.randomNumber = (min, max) => {
+	return Math.floor(Math.random() * (max - min) + min);
 }
 
 exports.embed = (title, description = '', fields = [], options = {}) => {
@@ -42,4 +48,18 @@ exports.game = (name, type = 0, url = '') => {
 		type: type,
 		url: url
 	}
+}
+
+exports.encrypt = (text) => {
+	var cipher = crypto.createCipher(_config.crypto.a, _config.crypto.p);
+	var crypted = cipher.update(text, 'utf8', 'hex');
+	crypted += cipher.final('hex');
+	return crypted;
+}
+
+exports.decrypt = (text) => {
+	var decipher = crypto.createDecipher(_config.crypto.a, _config.crypto.p);
+	var dec = decipher.update(text, 'hex', 'utf8');
+	dec += decipher.final('utf8');
+	return dec;
 }
