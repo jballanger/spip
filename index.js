@@ -4,6 +4,7 @@ process.on('unhandledRejection', (reason, p) => {
 
 const chalk = require('chalk');
 
+global.Promise = require('bluebird');
 try {
 	global._config = require('./config.json');
 } catch (e) {
