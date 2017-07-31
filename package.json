@@ -21,6 +21,8 @@
     "dateformat": "^2.0.0",
     "eris": "0.7.0",
     "eventemitter3": "2.0.3",
+    "html-to-text": "^3.3.0",
+    "leven": "^2.1.0",
     "pg": "^7.0.2",
     "popura": "^1.2.5",
     "readdir-recursive": "0.0.4",
