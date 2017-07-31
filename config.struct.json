@@ -1,4 +1,8 @@
 {
+	"crypto": {
+		"a": "aes-256-ctr",
+		"p": "abcdef12"
+	},
 	"discord": {
 		"token": "",
 		"prefix": "",
@@ -11,5 +15,9 @@
 			"user": "",
 			"pass": ""
 		}
+	},
+	"myanimelist": {
+		"username": "",
+		"password": ""
 	}
 }
