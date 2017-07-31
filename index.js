@@ -7,7 +7,7 @@ const chalk = require('chalk');
 try {
 	global._config = require('./config.json');
 } catch (e) {
-	console.error(chalk.red('Cannot find', chalk.bold('config.json'), '!\nPlease use', chalk.bold('config.struct.json'), 'to make your config.'));
+	console.error(chalk.red(chalk.bold('config.json'), 'is either non-existent or invalid !\nPlease use', chalk.bold('config.struct.json'), 'to make your config.'));
 	process.exit(1);
 }
 
