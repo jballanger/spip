@@ -1,4 +1,5 @@
 const crypto = require('crypto');
+const leven = require('leven');
 
 exports.randomColor = () => {
     return Math.floor(Math.random() * (0xFFFFFF + 1));
@@ -62,4 +63,12 @@ exports.decrypt = (text) => {
 	var dec = decipher.update(text, 'hex', 'utf8');
 	dec += decipher.final('utf8');
 	return dec;
+}
+
+exports.levenSort = (arr, src, key = null) => {
+	return arr.sort(function(a, b) {
+		let aKey = key ? a[key] : a;
+		let bKey = key ? b[key] : b;
+		return leven(src, aKey) < leven(src, bKey) ? -1 : 1;
+	});
 }
