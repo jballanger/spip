@@ -1,5 +1,6 @@
 const core = require('./index.js');
 const Eris = require('eris');
+const popura = require('popura');
 const EventEmitter = require('eventemitter3');
 
 class DiscordClient extends Eris.Client {
@@ -22,6 +23,7 @@ class DiscordClient extends Eris.Client {
 		this.commands = new core.CommandManager();
 		this.utils = core.Utils;
 		this.deleted = new Eris.Collection();
+		this.popura = popura(this.utils.decrypt(_config.myanimelist.username), this.utils.decrypt(_config.myanimelist.password));
 	}
 
 	async init() {
