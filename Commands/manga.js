@@ -3,9 +3,8 @@ const htmlToText = require('html-to-text');
 
 exports.run = async (bot, msg, args) => {
 	var search = args.join(' ');
-	await bot.chinmei.searchManga(search).then((res) => {
+	await bot.chinmei.searchSingleManga(search).then((manga) => {
 		var malUrl = 'https://myanimelist.net/manga/';
-		let manga = res;
 		if (!manga) {
 			throw  [42, 'That manga could not be found.'];
 		}

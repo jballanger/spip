@@ -3,9 +3,8 @@ const htmlToText = require('html-to-text');
 
 exports.run = async (bot, msg, args) => {
 	var search = args.join(' ');
-	await bot.chinmei.searchAnime(search).then((res) => {
+	await bot.chinmei.searchSingleAnime(search).then((anime) => {
 		var malUrl = 'https://myanimelist.net/anime/';
-		let anime = res;
 		if (!anime) {
 			throw  [42, 'That anime could not be found.'];
 		}
