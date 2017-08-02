@@ -20,7 +20,7 @@ class Database {
 				await this.sequelize.authenticate();
 				console.log(chalk.blue('Connected to database !'));
 			} else {
-				console.log(chalk.yellow('Not connecting to the database (Database informations missing in config).'));
+				console.log(chalk.yellow('Not connecting to the database (Database informations missing in config)'));
 			}
 		} catch (err) {
 			console.error(chalk.red(`Failed to connect to the database, retrying in 5 seconds..\n${err}`));
