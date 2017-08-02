@@ -1,6 +1,6 @@
 const core = require('./index.js');
 const Eris = require('eris');
-const Chinmei = require('../../chinmei/index.js');
+const Chinmei = require('chinmei');
 const EventEmitter = require('eventemitter3');
 
 class DiscordClient extends Eris.Client {
@@ -23,7 +23,7 @@ class DiscordClient extends Eris.Client {
 		this.commands = new core.CommandManager();
 		this.utils = core.Utils;
 		this.deleted = new Eris.Collection();
-		this.chinmei = Chinmei(this.utils.decrypt(_config.myanimelist.username), this.utils.decrypt(_config.myanimelist.password));
+		this.chinmei = new Chinmei(this.utils.decrypt(_config.myanimelist.username), this.utils.decrypt(_config.myanimelist.password));
 	}
 
 	async init() {
