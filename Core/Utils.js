@@ -1,5 +1,9 @@
 const crypto = require('crypto');
 const leven = require('leven');
+const request = require('request');
+const requestImage = require('request').defaults({encoding: null});
+const Canvas = require('canvas');
+const Image = Canvas.Image;
 
 exports.randomColor = () => {
     return Math.floor(Math.random() * (0xFFFFFF + 1));
@@ -70,5 +74,18 @@ exports.levenSort = (arr, src, key = null) => {
 		let aKey = key ? a[key] : a;
 		let bKey = key ? b[key] : b;
 		return leven(src, aKey) < leven(src, bKey) ? -1 : 1;
+	});
+}
+
+exports.loadImageUrl = (url) => {
+	return new Promise((resolve, reject) => {
+		requestImage.get(url, (err, res, data) => {
+			if (err) reject(err);
+			var img = new Image;
+			img.onload = () => {
+				resolve(img);
+			};
+			img.src = new Buffer(data, 'base64');
+		});
 	});
 }
