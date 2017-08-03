@@ -4,11 +4,15 @@ const EventEmitter = require('eventemitter3');
 class HinataFeed extends EventEmitter{
 	constructor() {
 		super();
-		this.source = 'http://localhost/hoc/wp-content/themes/hinata_v6/bot.json';
+		this.source = 'https://hinata-online-community.fr/wp-content/themes/hinata_v6/bot.json';
 		this.feed = {};
 		this.channels = [];
 		this.messages = [
-			''
+			'Nouvelle page d\'accueil !',
+			'',
+			'Nouvel anime !',
+			':tada: Welcome & good luck :^) :tada:',
+			'Nouveau Zoom Anime !'
 		];
 	}
 	
