@@ -89,3 +89,17 @@ exports.loadImageUrl = (url) => {
 		});
 	});
 }
+
+exports.parser = (args) => {
+	return new Promise (async (resolve, reject) => {
+		let options = [];
+		while (args[0].startsWith('-')) {
+			options.push(args[0]);
+			args = args.slice(1);
+			if (!args[0].startsWith('-'))
+				resolve({options: options, args: args});
+		}
+		if (!args[0].startsWith('-'))
+			resolve({options: options, args: args});
+	});
+}
