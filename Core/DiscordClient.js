@@ -23,12 +23,25 @@ class DiscordClient extends Eris.Client {
 		this.commands = new core.CommandManager();
 		this.utils = core.Utils;
 		this.deleted = new Eris.Collection();
-		this.chinmei = new Chinmei(this.utils.decrypt(_config.myanimelist.username), this.utils.decrypt(_config.myanimelist.password));
+		this.chinmei = new Chinmei(_config.myanimelist.username, _config.myanimelist.password);
 	}
 
 	async init() {
 		this.editStatus('online', this.utils.game(_config.discord.game));
 		await this.database.authenticate();
+		await this.hfeed.init();
+		await this.refreshBotChannels();
+	}
+
+	async refreshBotChannels() {
+		let botChannels = [];
+		await Object.keys(this.channelGuildMap).forEach((k, v) => {
+			let channel = this.getChannel(String(k));
+			if (channel.name === 'chan_de_bot') {
+				botChannels.push(channel);
+			}
+		});
+		this.hfeed.channels = botChannels;
 	}
 }
 
