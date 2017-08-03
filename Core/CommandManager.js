@@ -64,20 +64,19 @@ class CommandManager {
 		let args = split.slice(1);
 
 		let command = this.get(base);
-
-		let roles = this.bot.utils.getRoles(msg);
-		let levelRequired = command.info.level;
-		if (levelRequired.length > 0) {
-			if (!this.bot.utils.findOne(levelRequired, roles)) {
-				msg.channel.createMessage({
-					content: levelRequired.length > 1
-								? `<@${msg.author.id}> One of the following roles are required to use ${prefix}${base}.\n(${levelRequired.map(a => '**'+a+'**').join(', ')})`
-								: `<@${msg.author.id}> **${levelRequired[0]}** are required to use ${prefix}${base}.`
-				});
-				return null;
-			}
-		}
 		if (command) {
+			let roles = this.bot.utils.getRoles(msg);
+			let levelRequired = command.info.level;
+			if (levelRequired.length > 0) {
+				if (!this.bot.utils.findOne(levelRequired, roles)) {
+					msg.channel.createMessage({
+						content: levelRequired.length > 1
+									? `<@${msg.author.id}> One of the following roles are required to use ${prefix}${base}.\n(${levelRequired.map(a => '**'+a+'**').join(', ')})`
+									: `<@${msg.author.id}> **${levelRequired[0]}** are required to use ${prefix}${base}.`
+					});
+					return null;
+				}
+			}
 			return this.execute(msg, command, args);
 		}
 	}
