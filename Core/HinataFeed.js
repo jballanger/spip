@@ -1,38 +1,52 @@
-const http = require('http');
-const fs = require('fs');
+const request = require('request');
 const EventEmitter = require('eventemitter3');
 
-class HinataFeed {
+class HinataFeed extends EventEmitter{
 	constructor() {
-		this.source = 'http://hinata-online-community.fr/wp-content/themes/hinata_v6/bot.json';
+		super();
+		this.source = 'http://localhost/hoc/wp-content/themes/hinata_v6/bot.json';
 		this.feed = {};
-		this.emitter = new EventEmitter();
+		this.channels = [];
+		this.messages = [
+			''
+		];
 	}
+	
 	init() {
-		let loop = setInterval(() => {
-			let currentFeed = fs.createWriteStream('feed.json');
-			http.get(this.source, response => {
-				response.pipe(currentFeed);
-				//this.compareFeed();
+		this.getFeed().then((feed) => {
+			this.feed = feed;
+			this.watchFeed();
+		}).catch((e) => {
+			throw e;
+		});
+	}
+
+	getFeed() {
+		return new Promise((resolve, reject) => {
+			request({url: this.source, json: true}, (err, res, body) => {
+				if (err) reject(err);
+				if (res.statusCode === 200) {
+					resolve(body);
+				} else {
+					reject(new Error(res.body+'\n'+res.statusCode));
+				}
 			});
-		}, 1000);
-		fs.readFile('feed.json', 'utf8', (err, data) => {
-			if (err) throw err;
-			this.feed = JSON.parse(data);
 		});
 	}
-	compareFeed() {
-		fs.readFileSync('feed.json', 'utf8', (err, data) => {
-			if (err) throw err;
-			let newFeed = JSON.parse(data);
-			if (newFeed !== this.feed)
-				updateFeed(newFeed);
-			else
-				console.log('no diff');
-		});
-	}
-	updateFeed(newFeed) {
-		console.log(newFeed);
+
+	watchFeed() {
+		setInterval(() => {
+			this.getFeed().then((feed) => {
+				Object.keys(feed).forEach((k, v) => {
+					if (this.feed[k].title !== feed[k].title) {
+						this.emit('update', feed[k], v);
+						this.feed[k] = feed[k];
+					}
+				});
+			}).catch((e) => {
+				throw e;
+			});
+		}, 2000);
 	}
 }
 
