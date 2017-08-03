@@ -38,4 +38,21 @@ bot.on('shardDisconnect', (error, shard) => {
 	console.error(chalk.red(`Shard ${shard} disconnected :`, error.message));
 });
 
+bot.hfeed.on('update', (data, i) => {
+	bot.hfeed.channels.forEach((channel) => {
+		bot.createMessage(channel.id, {
+			embed: bot.utils.embed(
+				data.title,
+				bot.hfeed.messages[i],
+				[],
+				{url: data.link}
+			)
+		});
+	});
+});
+
+setInterval(() => {
+	bot.refreshBotChannels();
+}, 60000);
+
 bot.connect();
