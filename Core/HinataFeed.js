@@ -29,7 +29,7 @@ class HinataFeed extends EventEmitter{
 		return new Promise((resolve, reject) => {
 			request({url: this.source, json: true}, (err, res, body) => {
 				if (err) reject(err);
-				if (res.statusCode === 200) {
+				if (res && res.statusCode === 200) {
 					resolve(body);
 				} else {
 					reject(new Error(res.body+'\n'+res.statusCode));
