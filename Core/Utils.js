@@ -77,16 +77,24 @@ exports.levenSort = (arr, src, key = null) => {
 	});
 }
 
-exports.loadImageUrl = (url) => {
+exports.loadImageUrl = (...urls) => {
 	return new Promise((resolve, reject) => {
-		requestImage.get(url, (err, res, data) => {
-			if (err) reject(err);
-			var img = new Image;
-			img.onload = () => {
-				resolve(img);
-			};
-			img.src = new Buffer(data, 'base64');
-		});
+		var images = [];
+		var completed = 0;
+		for (var i = 0; i < urls.length; i++) {
+			requestImage.get(urls[i], (err, res, data) => {
+				if (err) reject(err);
+				let curr = i;
+				let img = new Image;
+				images.push(img);
+				img.onload = () => {
+						completed++;
+						if (completed == urls.length)
+							resolve(images);
+				};
+				img.src = new Buffer(data, 'base64');
+			});
+		}
 	});
 }
 
