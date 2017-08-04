@@ -8,13 +8,11 @@ exports.run = async (bot, msg, args) => {
 		bot.editStatus('online', bot.utils.game(game));
 		if (parser.options.indexOf('--save') !== -1 || parser.options.indexOf('-s') !== -1) {
 			config.discord.game = game;
-			fs.unlink('../config.json', (err) => {
-				fs.writeFile('../config.json', JSON.stringify(config, null, 4), (err) => {
-					if (err) {
-						console.error(chalk.red(`Error while saving config.json !\n${err}`));
-						throw 'Couldn\'t save config.json';
-					}
-				});
+			fs.writeFile('config.json', JSON.stringify(config, null, 4), (err) => {
+				if (err) {
+					console.error(chalk.red(`Error while saving config.json !\n${err}`));
+					throw 'Couldn\'t save config.json';
+				}
 			});
 		}
 	});
