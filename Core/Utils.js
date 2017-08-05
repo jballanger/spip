@@ -82,11 +82,11 @@ exports.loadImageUrl = (...urls) => {
 		var images = [];
 		var completed = 0;
 		for (var i = 0; i < urls.length; i++) {
+			let img = new Image;
+			images.push(img);
 			requestImage.get(urls[i], (err, res, data) => {
 				if (err) reject(err);
 				let curr = i;
-				let img = new Image;
-				images.push(img);
 				img.onload = () => {
 						completed++;
 						if (completed == urls.length)
