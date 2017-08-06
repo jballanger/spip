@@ -2,8 +2,8 @@ const Canvas = require('canvas');
 Canvas.registerFont('Misc/OpenSans-Regular.ttf', {family: 'Open Sans'});
 
 exports.run = async (bot, msg) => {
-	let user = null;
-	await bot.database.getUser('96616622436937728').then((u) => {user = u});
+	let profileUser = msg.mentions.length > 0 ? msg.mentions[0] : msg.author;
+	await bot.database.getUser(profileUser).then((u) => {user = u});
 	await bot.utils.getExp(user.exp).then((e) => {user.exp = e});
 	let backgrounds = [
 		'http://img04.deviantart.net/793d/i/2016/009/e/1/background_anime_1_by_al00ndr44-d9nd73s.png',
@@ -25,7 +25,7 @@ exports.run = async (bot, msg) => {
 		'http://www.p-pokemon.com/images-pokemon-actualite/pict_champions-arene-pokemon-rubis-omega-saphir-alpha_17583_37_.png'
 	];
 	let url2 = badges[bot.utils.randomNumber(0, badges.length)];
-	bot.utils.loadImageUrl(url, msg.author.avatarURL, url2).then(async (images) => {
+	bot.utils.loadImageUrl(url, profileUser.avatarURL, url2).then(async (images) => {
 		let profile = new Canvas(360, 120);
 		let ctx = profile.getContext('2d');
 		ctx.drawImage(images[0], 0, 0, 360, 120);
@@ -47,7 +47,7 @@ exports.run = async (bot, msg) => {
 		ctx.stroke();
 		ctx.fillStyle = "#6c6c6c";
 		ctx.font = '20px "Open Sans"';
-		ctx.fillText(msg.author.username, 100, 30);
+		ctx.fillText(user.username, 100, 30);
 		ctx.font = '20px "Open Sans"';
 		ctx.fillText('LEVEL', 100, 70);
 		ctx.font = '30px "Open Sans"';
