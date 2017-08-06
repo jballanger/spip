@@ -2,6 +2,9 @@ const Canvas = require('canvas');
 Canvas.registerFont('Misc/OpenSans-Regular.ttf', {family: 'Open Sans'});
 
 exports.run = async (bot, msg) => {
+	let user = null;
+	await bot.database.getUser('96616622436937728').then((u) => {user = u});
+	await bot.utils.getExp(user.exp).then((e) => {user.exp = e});
 	let backgrounds = [
 		'http://img04.deviantart.net/793d/i/2016/009/e/1/background_anime_1_by_al00ndr44-d9nd73s.png',
 		'http://img12.deviantart.net/75f8/i/2016/234/9/0/anime_background_by_nieris-daeuy2n.png',
@@ -33,11 +36,11 @@ exports.run = async (bot, msg) => {
 		ctx.fillRect(20, 26, 68, 68);
 		ctx.globalAlpha = 1;
 		ctx.fillStyle = 'grey';
-		ctx.fillRect(99, 39, 202, 12);
+		ctx.fillRect(99, 39, 208, 12);
 		ctx.fillStyle = 'white';
-		ctx.fillRect(100, 40, 200, 10);
+		ctx.fillRect(100, 40, 206, 10);
 		ctx.fillStyle = 'grey';
-		ctx.fillRect(102, 42, 150, 6)
+		ctx.fillRect(102, 42, (parseInt(user.exp, 10) / 100) * 202, 6);
 		ctx.beginPath();
 		ctx.moveTo(160, 55);
 		ctx.lineTo(160, 105);
@@ -48,14 +51,14 @@ exports.run = async (bot, msg) => {
 		ctx.font = '20px "Open Sans"';
 		ctx.fillText('LEVEL', 100, 70);
 		ctx.font = '30px "Open Sans"';
-		ctx.fillText('21', 110, 100);
+		ctx.fillText(user.level, (130 - (user.level.toString().length) * 10), 100);
 		ctx.font = '15px "Open Sans"';
-		ctx.fillText('Server Rank', 175, 75);
-		ctx.fillText('Points', 175, 95);
-		ctx.fillText('#1', 290, 75);
-		ctx.fillText('472', 290, 95);
+		ctx.fillText('Server Rank', 170, 75);
+		ctx.fillText('Points', 170, 95);
+		ctx.fillText('#'+user.rank, 270, 75);
+		ctx.fillText(user.points, 270, 95);
 		ctx.font = '10px "Open Sans"';
-		ctx.fillText('75%', 305, 48);
+		ctx.fillText(user.exp+'%', 310, 48);
 		ctx.globalAlpha = 1;
 		ctx.drawImage(images[1], 22, 28, 64, 64);
 		ctx.drawImage(images[2], 310, 10, 24, 24)
