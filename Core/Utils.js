@@ -99,7 +99,7 @@ exports.loadImageUrl = (...urls) => {
 }
 
 exports.parser = (args) => {
-	return new Promise (async (resolve, reject) => {
+	return new Promise(async (resolve, reject) => {
 		let options = [];
 		while (args[0].startsWith('-')) {
 			options.push(args[0]);
@@ -109,5 +109,11 @@ exports.parser = (args) => {
 		}
 		if (!args[0].startsWith('-'))
 			resolve({options: options, args: args});
+	});
+}
+
+exports.getExp = (exp) => {
+	return new Promise((resolve, reject) => {
+		resolve('59');
 	});
 }
