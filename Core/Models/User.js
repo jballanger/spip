@@ -14,6 +14,10 @@ class UserModel {
 				type: this.Sequelize.BIGINT,
 				allowNull: false
 			},
+			username: {
+				type: this.Sequelize.STRING(32),
+				allowNull: false
+			},
 			level: {
 				type: this.Sequelize.INTEGER,
 				allowNull: false,

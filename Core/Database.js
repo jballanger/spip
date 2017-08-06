@@ -35,14 +35,15 @@ class Database {
 		}
 	}
 
-	getUser(uid) {
+	getUser(user) {
 		return new Promise((resolve, reject) => {
 			this.models.User.model.findOrCreate({
 				where: {
-					uid: uid
+					uid: user.id
 				},
 				defaults: {
-					uid: uid,
+					uid: user.id,
+					username: user.username,
 					level: '0',
 					exp: '0',
 					rank: '999',
