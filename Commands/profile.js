@@ -2,6 +2,7 @@ const Canvas = require('canvas');
 Canvas.registerFont('Misc/OpenSans-Regular.ttf', {family: 'Open Sans'});
 
 exports.run = async (bot, msg) => {
+	if (!bot.database.use) throw 'This command is actually unavailable';
 	let profileUser = msg.mentions.length > 0 ? msg.mentions[0] : msg.author;
 	await bot.database.getUser(profileUser).then((u) => {user = u});
 	await bot.utils.getExp(user.exp).then((e) => {user.exp = e});
