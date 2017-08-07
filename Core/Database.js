@@ -47,7 +47,8 @@ class Database {
 					level: '0',
 					exp: '0',
 					rank: '999',
-					points: '0'
+					points: '0',
+					background: ''
 				}
 			}).spread((user, created) => {
 				resolve(user.dataValues);
