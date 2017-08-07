@@ -24,6 +24,7 @@ class DiscordClient extends Eris.Client {
 		this.utils = core.Utils;
 		this.deleted = new Eris.Collection();
 		this.chinmei = new Chinmei(_config.myanimelist.username, _config.myanimelist.password);
+		this.Stats = new core.Stats(this);
 	}
 
 	async init() {
