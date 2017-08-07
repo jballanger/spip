@@ -4,5 +4,6 @@ module.exports = {
 	DiscordClient: require('./DiscordClient'),
 	HinataFeed: require('./HinataFeed'),
 	ImportManager: require('./ImportManager'),
+	Stats: require('./Stats'),
 	Utils: require('./Utils')
 }

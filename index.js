@@ -35,7 +35,7 @@ bot.on('error', (err, shard) => {
 });
 
 bot.on('shardDisconnect', (error, shard) => {
-	console.error(chalk.red(`Shard ${shard} disconnected :`, error.message));
+	console.error(chalk.red(`Shard ${shard} disconnected :`, error));
 });
 
 bot.hfeed.on('update', (data, i) => {

@@ -1,8 +1,4 @@
 {
-	"crypto": {
-		"a": "aes-256-ctr",
-		"p": "abcdef12"
-	},
 	"discord": {
 		"token": "",
 		"prefix": "",
@@ -19,5 +15,8 @@
 	"myanimelist": {
 		"username": "",
 		"password": ""
+	},
+	"hinata_feed": {
+		"channel": ""
 	}
 }
