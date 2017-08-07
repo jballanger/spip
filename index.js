@@ -19,6 +19,7 @@ var bot = new DiscordClient();
 bot.on('ready', async () => {
 	await bot.init();
 	await bot.commands.init(bot);
+	await bot.Stats.expTable();
 	console.log(chalk.green(`\n${bot.user.username}#${bot.user.discriminator} ready !`));
 });
 
