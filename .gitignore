@@ -2,4 +2,3 @@ node_modules/
 config.json
 .DS_Store
 Core/Stats.js
-expTable.json
