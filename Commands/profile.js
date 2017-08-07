@@ -5,7 +5,7 @@ exports.run = async (bot, msg) => {
 	if (!bot.database.use) throw 'This command is actually unavailable';
 	let profileUser = msg.mentions.length > 0 ? msg.mentions[0] : msg.author;
 	await bot.database.getUser(profileUser).then((u) => {user = u});
-	await bot.utils.getExp(user.exp).then((e) => {user.exp = e});
+	user.exp =  bot.Stats.getExpPercent(user.level, user.exp);
 	let backgrounds = [
 		'http://img04.deviantart.net/793d/i/2016/009/e/1/background_anime_1_by_al00ndr44-d9nd73s.png',
 		'http://img12.deviantart.net/75f8/i/2016/234/9/0/anime_background_by_nieris-daeuy2n.png',
