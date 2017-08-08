@@ -4,6 +4,7 @@ class CommandManager {
 	constructor(bot) {
 		this.bot = null;
 		this.commands = [];
+		this.prefix = _config.discord.prefix;
 	}
 	
 	async init(bot) {
@@ -56,10 +57,9 @@ class CommandManager {
 	}
 
 	handleCommand(msg, input) {
-		const prefix = _config.discord.prefix;
-		if (!input.startsWith(prefix) || !msg.channel.guild) return;
+		if (!input.startsWith(this.prefix) || !msg.channel.guild) return;
 
-		let split = input.substr(prefix.length).trim().split(' ');
+		let split = input.substr(this.prefix.length).trim().split(' ');
 		let base = split[0].toLowerCase();
 		let args = split.slice(1);
 
@@ -71,8 +71,8 @@ class CommandManager {
 				if (!this.bot.utils.findOne(levelRequired, roles)) {
 					msg.channel.createMessage({
 						content: levelRequired.length > 1
-									? `<@${msg.author.id}> One of the following roles are required to use ${prefix}${base}.\n(${levelRequired.map(a => '**'+a+'**').join(', ')})`
-									: `<@${msg.author.id}> **${levelRequired[0]}** are required to use ${prefix}${base}.`
+									? `<@${msg.author.id}> One of the following roles are required to use ${this.prefix}${base}.\n(${levelRequired.map(a => '**'+a+'**').join(', ')})`
+									: `<@${msg.author.id}> **${levelRequired[0]}** are required to use ${this.prefix}${base}.`
 					});
 					return null;
 				}
