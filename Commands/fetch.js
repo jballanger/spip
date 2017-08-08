@@ -18,6 +18,8 @@ exports.run = async (bot, msg, args) => {
 	? roles = roles.join(', ')
 	: roles = 'None';
 
+	let user = null;
+	await bot.database.getUser(member).then((u) => {user = u});
 	(await msg.channel.createMessage({
 		embed: bot.utils.embed(
 				`${member.username}#${member.discriminator}`,
@@ -30,6 +32,26 @@ exports.run = async (bot, msg, args) => {
 				{
 					name: 'Game',
 					value: game,
+					inline: true
+				},
+				{
+					name: 'Level',
+					value: user.level,
+					inline: true
+				},
+				{
+					name: 'Exp',
+					value: `${user.exp}/${bot.Stats.formula(user.level + 1)}`,
+					inline: true
+				},
+				{
+					name: 'Points',
+					value: user.points,
+					inline: true
+				},
+				{
+					name: 'Rank',
+					value: user.rank,
 					inline: true
 				},
 				{
