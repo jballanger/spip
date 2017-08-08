@@ -23,9 +23,9 @@ bot.on('ready', async () => {
 	console.log(chalk.green(`\n${bot.user.username}#${bot.user.discriminator} ready !`));
 });
 
-bot.on('messageCreate', async (msg) => {
+bot.on('messageCreate', (msg) => {
 	if (msg.author.id === bot.user.id) return ;
-	await bot.Stats.updateStats(msg);
+	if (!msg.content.startsWith(this.commands.prefix)) bot.Stats.updateStats(msg);
 	bot.commands.handleCommand(msg, msg.content);
 });
 
