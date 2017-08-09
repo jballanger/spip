@@ -14,7 +14,7 @@ exports.run = async (bot, msg) => {
 		'http://orig08.deviantart.net/fe76/f/2015/131/2/c/anime_school__6_by_shamelessbeauty3-d8szdgt.png',
 
 	];
-	let url = backgrounds[bot.utils.randomNumber(0, backgrounds.length)];
+	let url = user.background || backgrounds[bot.utils.randomNumber(0, backgrounds.length)];
 	let badges = [
 		'http://www.p-pokemon.com/images-pokemon-actualite/pict_champions-arene-pokemon-rubis-omega-saphir-alpha_17564_18_.png',
 		'http://www.p-pokemon.com/images-pokemon-actualite/pict_champions-arene-pokemon-rubis-omega-saphir-alpha_17552_6_.png',
