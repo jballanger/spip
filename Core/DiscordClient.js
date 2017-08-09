@@ -30,6 +30,7 @@ class DiscordClient extends Eris.Client {
 	async init() {
 		this.editStatus('online', this.utils.game(_config.discord.game));
 		await this.database.authenticate();
+		await this.Stats.updateLadder();
 		await this.hfeed.init();
 		await this.refreshBotChannels();
 	}
