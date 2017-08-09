@@ -32,7 +32,8 @@ class HinataFeed extends EventEmitter{
 				if (res && res.statusCode === 200) {
 					resolve(body);
 				} else {
-					reject(new Error(res.body+'\n'+res.statusCode));
+					if (res) reject(new Error(res.body+'\n'+res.statusCode));
+					else reject(new Error('res is undefined'));
 				}
 			});
 		});
