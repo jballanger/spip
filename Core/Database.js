@@ -56,6 +56,18 @@ class Database {
 		});
 	}
 
+	getAllUsers() {
+		return new Promise((resolve, reject) => {
+			resolve(this.models.User.model.findAll());
+		});
+	}
+
+	updateRank(id, rank) {
+		this.models.User.model.update({rank: rank}, {where: {id: id}}).then((row) => {
+			if (row[0] < 1) throw `${row[0]} rows were affected`;
+		});
+	}
+
 	async loadModels() {
 		const models = require('./Models');
 		this.models = {};
