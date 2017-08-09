@@ -19,13 +19,12 @@ var bot = new DiscordClient();
 bot.on('ready', async () => {
 	await bot.init();
 	await bot.commands.init(bot);
-	await bot.Stats.expTable();
 	console.log(chalk.green(`\n${bot.user.username}#${bot.user.discriminator} ready !`));
 });
 
 bot.on('messageCreate', (msg) => {
 	if (msg.author.id === bot.user.id) return ;
-	if (!msg.content.startsWith(this.commands.prefix)) bot.Stats.updateStats(msg);
+	if (!msg.content.startsWith(bot.commands.prefix)) bot.Stats.updateStats(msg);
 	bot.commands.handleCommand(msg, msg.content);
 });
 
