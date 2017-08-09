@@ -5,9 +5,7 @@ exports.run = async (bot, msg) => {
 	}
 
 	if (!user.avatarURL) {
-		throw msg.channel.createMessage({
-			content: 'That user does not exist or does not have an avatar'
-		});
+		throw 'That user does not exist or does not have an avatar';
 	}
 
 	(await msg.channel.createMessage({
