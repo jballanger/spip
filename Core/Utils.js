@@ -111,9 +111,3 @@ exports.parser = (args) => {
 			resolve({options: options, args: args});
 	});
 }
-
-exports.getExp = (exp) => {
-	return new Promise((resolve, reject) => {
-		resolve('59');
-	});
-}
