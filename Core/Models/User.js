@@ -10,6 +10,10 @@ class UserModel {
 				primaryKey: true,
 				autoIncrement: true
 			},
+			gid: {
+				type: this.Sequelize.BIGINT,
+				allowNull: false
+			},
 			uid: {
 				type: this.Sequelize.BIGINT,
 				allowNull: false

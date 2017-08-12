@@ -4,7 +4,7 @@ Canvas.registerFont('Misc/OpenSans-Regular.ttf', {family: 'Open Sans'});
 exports.run = async (bot, msg) => {
 	if (!bot.database.use) throw 'This command is actually unavailable';
 	let profileUser = msg.mentions.length > 0 ? msg.mentions[0] : msg.author;
-	await bot.database.getUser(profileUser).then((u) => {user = u});
+	await bot.database.getUser(profileUser, msg.channel.guild.id).then((u) => {user = u});
 	user.exp =  bot.Stats.getExpPercent(user.level, user.exp);
 	let backgrounds = [
 		'http://img04.deviantart.net/793d/i/2016/009/e/1/background_anime_1_by_al00ndr44-d9nd73s.png',

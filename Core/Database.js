@@ -35,14 +35,16 @@ class Database {
 		}
 	}
 
-	getUser(user) {
+	getUser(user, gid) {
 		return new Promise((resolve, reject) => {
 			this.models.User.model.findOrCreate({
 				where: {
-					uid: user.id
+					uid: user.id,
+					gid: gid
 				},
 				defaults: {
 					uid: user.id,
+					gid: gid,
 					username: user.username,
 					level: '0',
 					exp: '0',
@@ -56,9 +58,9 @@ class Database {
 		});
 	}
 
-	getAllUsers() {
+	getAllUsers(gid) {
 		return new Promise((resolve, reject) => {
-			resolve(this.models.User.model.findAll());
+			resolve(this.models.User.model.findAll({where: {gid: gid}}));
 		});
 	}
 

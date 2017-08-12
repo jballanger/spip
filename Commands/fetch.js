@@ -19,7 +19,7 @@ exports.run = async (bot, msg, args) => {
 	: roles = 'None';
 
 	let user = null;
-	await bot.database.getUser(member).then((u) => {user = u});
+	await bot.database.getUser(msg.user, msg.channel.guild.id).then((u) => {user = u});
 	(await msg.channel.createMessage({
 		embed: bot.utils.embed(
 				`${member.username}#${member.discriminator}`,

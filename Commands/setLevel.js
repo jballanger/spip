@@ -2,7 +2,7 @@ exports.run = (bot, msg, args) => {
 	const user = msg.mentions[0];
 	const level = parseInt(args[1], 10);
 	if (!level) throw 'Invalid level';
-	bot.database.models.User.model.update({level: level}, {where: {uid: user.id}}).then((row) => {
+	bot.database.models.User.model.update({level: level}, {where: {uid: user.id, gid: msg.channel.guild.id}}).then((row) => {
 		if (row[0] < 1) throw `${row[0]} rows were affected`;
 	});
 }
