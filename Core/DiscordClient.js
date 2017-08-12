@@ -30,20 +30,25 @@ class DiscordClient extends Eris.Client {
 	async init() {
 		this.editStatus('online', this.utils.game(_config.discord.game));
 		await this.database.authenticate();
-		await this.Stats.updateLadder();
 		await this.hfeed.init();
 		await this.refreshBotChannels();
+		await this.Stats.updateLadder();
 	}
 
 	async refreshBotChannels() {
-		let botChannels = [];
+		let hfeedChannels = [];
+		let ladderChannels = [];
 		await Object.keys(this.channelGuildMap).forEach((k, v) => {
 			let channel = this.getChannel(String(k));
 			if (channel.name === 'chan_de_bot') {
-				botChannels.push(channel);
+				hfeedChannels.push(channel);
+			}
+			if (channel.name === 'ladder') {
+				ladderChannels.push(channel);
 			}
 		});
-		this.hfeed.channels = botChannels;
+		this.hfeed.channels = hfeedChannels;
+		this.Stats.channels = ladderChannels;
 	}
 }
 
