@@ -4,7 +4,7 @@ dateFormat('dddd, mmmm dS, yyyy, HH:MM:ss');
 
 exports.run = async (bot, msg, args) => {
 	let guild = msg.channel.guild;
-	let member = guild.members.get(args[0]) || guild.members.get(msg.mentions[0].id);
+	let member = guild.members.get(args[0]) || (msg.mentions[0] && guild.members.get(msg.mentions[0].id));
 	if (!member) {
 		throw 'That user could not be found.';
 	}
@@ -19,7 +19,7 @@ exports.run = async (bot, msg, args) => {
 	: roles = 'None';
 
 	let user = null;
-	await bot.database.getUser(msg.user, msg.channel.guild.id).then((u) => {user = u});
+	await bot.database.getUser(msg.author, msg.channel.guild.id).then((u) => {user = u});
 	(await msg.channel.createMessage({
 		embed: bot.utils.embed(
 				`${member.username}#${member.discriminator}`,
