@@ -19,7 +19,7 @@
     "bluebird": "3.5.0",
     "canvas": "2.0.0-alpha.2",
     "chalk": "^2.0.1",
-    "chinmei": "1.0.5",
+    "chinmei": "1.1.5",
     "dateformat": "^2.0.0",
     "eris": "0.7.0",
     "eventemitter3": "2.0.3",
