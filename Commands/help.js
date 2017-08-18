@@ -1,11 +1,15 @@
 exports.run = async (bot, msg, args) => {
 	let command = bot.commands.get(args[0]);
-
 	if (!command)
 		throw 'Command not found.';
-
-	(await msg.channel.createMessage({
-		embed: bot.utils.embed(
+	let embed = new bot.discord.RichEmbed()
+				.setTitle(`Help for ${command.info['name']}`)
+				.addField('Usage', `${_config.discord.prefix}${command.info['usage']}`)
+				.addField('Description', command.info['description'])
+				.addField('Role required', command.info['level'].length > 0 ? `One of ${command.info['level'].map(a => '**'+a+'**').join(', ')}` : 'None');
+	await msg.channel.send({embed: embed});
+		
+		/*embed: bot.utils.embed(
 				`Help for ${command.info['name']}`,
 				'',
 				[{
@@ -23,8 +27,7 @@ exports.run = async (bot, msg, args) => {
 							: 'None'
 				}],
 				{}
-			)
-	}));
+			)*/
 };
 
 exports.info = {

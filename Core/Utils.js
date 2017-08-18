@@ -31,9 +31,12 @@ exports.embed = (title, description = '', fields = [], options = {}) => {
 		}
 }
 
-exports.findOne = (haystack, arr) => {
-	return arr.some(function(v) {
-		return haystack.indexOf(v) >= 0;
+exports.findOne = (arr1, collection) => {
+	arr1.forEach((elem, i) => {
+		if (collection.has('name', elem))
+			return 1;
+		else if (i == arr1.length)
+			return 0;
 	});
 }
 

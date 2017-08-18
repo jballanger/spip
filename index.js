@@ -22,7 +22,7 @@ bot.on('ready', async () => {
 	console.log(chalk.green(`\n${bot.user.username}#${bot.user.discriminator} ready !`));
 });
 
-bot.on('messageCreate', (msg) => {
+bot.on('message', (msg) => {
 	if (msg.author.id === bot.user.id) return ;
 	if (!msg.content.startsWith(bot.commands.prefix)) bot.Stats.updateStats(msg);
 	bot.commands.handleCommand(msg, msg.content);
@@ -56,5 +56,3 @@ bot.hfeed.on('update', (data, i) => {
 setInterval(() => {
 	bot.refreshBotChannels();
 }, 60000);
-
-bot.connect();
