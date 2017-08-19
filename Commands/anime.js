@@ -2,21 +2,18 @@ const chalk = require('chalk');
 const htmlToText = require('html-to-text');
 
 exports.run = async (bot, msg, args) => {
-	var search = args.join(' ');
+	let search = args.join(' ');
 	await bot.chinmei.searchSingleAnime(search).then(async (anime) => {
-		var malUrl = 'https://myanimelist.net/anime/';
-		if (!anime) {
-			throw  [42, 'That anime could not be found.'];
-		}
+		if (!anime)	throw [42, 'That anime could not be found.'];
 
 		let synopsis = htmlToText.fromString(anime.synopsis, {ignoreHref: true}).replace(/\[(.+?)\]/g, '').replace(/\n/g, ' ');
 		let embed = new bot.discord.RichEmbed()
 			.setTitle(anime.title)
 			.setDescription(anime.english.length > 0 ? `(${anime.english})` : '')
-			.setURL(`${malUrl}${anime.id}/`)
+			.setURL(`https://myanimelist.net/anime/${anime.id}/`)
 			.setThumbnail(anime.image)
 			.setFooter('MyAnimeList', 'https://myanimelist.cdn-dena.com/images/faviconv5.ico')
-			.addField('Episodes', anime.episodes === 0 ? 'Unknow' : String(anime.episodes), true)
+			.addField('Episodes', anime.episodes === 0 ? 'Unknow' : anime.episodes, true)
 			.addField('Type', anime.type, true)
 			.addField('Status', anime.status, true)
 			.addField('Score', anime.score, true)
