@@ -19,7 +19,7 @@ class DiscordClient extends DiscordJs.Client {
 	}
 
 	async init() {
-		this.user.setGame(_config.discord.game);
+		this.user.setGame(_config.discord.game, {type: 0});
 		await this.database.authenticate();
 		await this.hfeed.init();
 		await this.refreshBotChannels();

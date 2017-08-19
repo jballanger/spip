@@ -5,7 +5,7 @@ var config = require('../config.json');
 exports.run = async (bot, msg, args) => {
 	bot.utils.parser(args).then(async (parser) => {
 		let game = parser.args.join(' ');
-		bot.editStatus('online', bot.utils.game(game));
+		bot.setGame(game, {type: 0});
 		if (parser.options.indexOf('--save') !== -1 || parser.options.indexOf('-s') !== -1) {
 			config.discord.game = game;
 			fs.writeFile('config.json', JSON.stringify(config, null, 4), (err) => {
