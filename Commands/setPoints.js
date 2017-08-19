@@ -1,5 +1,6 @@
 exports.run = (bot, msg, args) => {
-	const user = msg.mentions[0];
+	if (msg.mentions.users.size < 1) throw 'No user given.';
+	const user = msg.mentions.users.first();
 	const points = parseInt(args[1], 10);
 	if (!points) throw 'Invalid number of points';
 	bot.database.models.User.model.update({points: points}, {where: {uid: user.id, gid: msg.channel.guild.id}}).then((row) => {
