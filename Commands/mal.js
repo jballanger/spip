@@ -1,78 +1,30 @@
 exports.run = (bot, msg, args) => {
-	if (!args || !args[0]) throw 'No user given.';
-	let user = args[0];
-	let p1 = bot.chinmei.getMalUser(user, 1);
-	let p2 = bot.chinmei.getMalUser(user, 2);
+	if (!args[0]) throw 'No user given.';
+	let p1 = bot.chinmei.getMalUser(args[0], 1);
+	let p2 = bot.chinmei.getMalUser(args[0], 2);
 	return Promise.all([p1, p2]).then(async (malUser) => {
 		let u1 = malUser[0].myinfo;
 		let u2 = malUser[1].myinfo;
-		(await msg.channel.createMessage({
-			embed: bot.utils.embed(
-				u1.user_name,
-				'MyAnimeList Infos',
-				[{
-					name: 'Watching',
-					value: u1.user_watching,
-					inline: true
-				},
-				{
-					name: 'Reading',
-					value: u2.user_reading,
-					inline: true
-				},
-				{
-					name: 'Anime Completed',
-					value: u1.user_completed,
-					inline: true
-				},
-				{
-					name: 'Manga Completed',
-					value: u2.user_completed,
-					inline: true
-				},
-				{
-					name: 'Anime On hold',
-					value: u1.user_onhold,
-					inline: true
-				},
-				{
-					name: 'Manga On hold',
-					value: u2.user_onhold,
-					inline: true
-				},
-				{
-					name: 'Anime Dropped',
-					value: u1.user_dropped,
-					inline: true
-				},
-				{
-					name: 'Manga Dropped',
-					value: u2.user_dropped,
-					inline: true
-				},
-				{
-					name: 'Plan to watch',
-					value: u1.user_plantowatch,
-					inline: true
-				},
-				{
-					name: 'Plan to read',
-					value: u2.user_plantoread,
-					inline: true
-				}],
-				{
-					url: `https://myanimelist.net/profile/${u1.user_name}`,
-					footer: {
-						text: u1.user_id,
-						icon_url: 'https://myanimelist.cdn-dena.com/images/faviconv5.ico'
-					}
-				}
-			)
-		}));
+		let embed = new bot.discord.RichEmbed()
+			.setTitle(u1.user_name)
+			.setDescription('MyAnimeList Infos')
+			.setURL(`https://myanimelist.net/profile/${u1.user_name}`)
+			.setFooter(u1.user_id, 'https://myanimelist.cdn-dena.com/images/faviconv5.ico')
+			.setThumbnail(`https://myanimelist.cdn-dena.com/images/userimages/${u1.user_id}.jpg`)
+			.addField('Watching', u1.user_watching, true)
+			.addField('Reading', u2.user_reading, true)
+			.addField('Anime completed', u1.user_completed, true)
+			.addField('Manga completed', u2.user_completed, true)
+			.addField('Anime on hold', u1.user_onhold, true)
+			.addField('Manga on hold', u2.user_onhold, true)
+			.addField('Anime dropped', u1.user_dropped, true)
+			.addField('Manga dropped', u2.user_dropped, true)
+			.addField('Plan to watch', u1.user_plantowatch, true)
+			.addField('Plan to read', u2.user_plantoread, true);
+		await msg.channel.send({embed: embed});
 	}).catch((e) => {
 		throw 'User not found.';
 	});
-	throw 'test';
 }
 
 exports.info = {
