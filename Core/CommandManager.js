@@ -67,10 +67,10 @@ class CommandManager {
 		if (command) {
 			let levelRequired = command.info.level;
 			if (levelRequired.length > 0) {
-				if (!this.bot.utils.findOne(levelRequired, msg.member.roles)) {
+				if (!levelRequired.some(e => msg.member.roles.exists('name', e))) {
 					msg.reply(levelRequired.length > 1
-								? `<@${msg.author.id}> One of the following roles are required to use ${this.prefix}${base}.\n(${levelRequired.map(a => '**'+a+'**').join(', ')})`
-								: `<@${msg.author.id}> **${levelRequired[0]}** are required to use ${this.prefix}${base}.`
+						? `One of the following roles are required to use ${this.prefix}${base}.\n(${levelRequired.map(a => '**'+a+'**').join(', ')})`
+						: `**${levelRequired[0]}** are required to use ${this.prefix}${base}.`
 					);
 					return null;
 				}
@@ -84,6 +84,7 @@ class CommandManager {
 			return await command.run(this.bot, msg, args);
 		} catch (err) {
 			msg.reply(err);
+			console.log(err);
 			return null;
 		}
 	}
