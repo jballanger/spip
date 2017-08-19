@@ -10,7 +10,7 @@ exports.run = async (bot, msg, args) => {
 	let userStats = null;
 	await bot.database.getUser(member.user, msg.channel.guild.id).then((u) => {userStats = u});
 	let embed = new bot.discord.RichEmbed()
-		.setTitle(`${member.user.username}#${member.user.discriminator}`)
+		.setTitle(member.user.tag)
 		.setDescription(member.user.avatarURL ? `[Download avatar](${member.user.avatarURL})` : '')
 		.setFooter(member.id)
 		.setThumbnail(member.user.avatarURL)
