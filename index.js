@@ -32,8 +32,8 @@ bot.on('messageDelete', (msg) => {
 	bot.deleted.set(msg.id, msg);
 });
 
-bot.on('error', (err, shard) => {
-	console.error(chalk.red(`${err} on shard ${shard}`));
+bot.on('warn', (err) => {
+	console.error(`${chalk.yellow('WARN')}: ${err}`);
 });
 
 bot.on('shardDisconnect', (error, shard) => {
@@ -42,14 +42,11 @@ bot.on('shardDisconnect', (error, shard) => {
 
 bot.hfeed.on('update', (data, i) => {
 	bot.hfeed.channels.forEach((channel) => {
-		bot.createMessage(channel.id, {
-			embed: bot.utils.embed(
-				data.title,
-				bot.hfeed.messages[i],
-				[],
-				{url: data.link}
-			)
-		});
+		let embed = new bot.discord.RichEmbed()
+			.setTitle(data.title)
+			.setDescription(bot.hfeed.messages[i])
+			.setURL(data.link);
+		channel.send({embed: embed});
 	});
 });
 
