@@ -13,7 +13,7 @@ exports.run = async (bot, msg, args) => {
 
 exports.info = {
 	name: 'help',
-	usage: 'help <command>',
 	description: 'Display the help of a command',
+	usage: 'help <command>',
 	level: []
 };

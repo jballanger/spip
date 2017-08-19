@@ -12,7 +12,7 @@ exports.run = async (bot, msg) => {
 
 exports.info = {
 	name: 'avatar',
-	usage: 'avatar <@user>',
 	description: 'Display the avatar of a user',
+	usage: 'avatar <@user>',
 	level: []
 };

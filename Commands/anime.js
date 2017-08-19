@@ -36,7 +36,7 @@ exports.run = async (bot, msg, args) => {
 
 exports.info = {
 	name: 'anime',
-	usage: 'anime <search>',
 	description: 'Get details of an anime from MyAnimeList',
+	usage: 'anime <search>',
 	level: []
 }

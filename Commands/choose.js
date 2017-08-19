@@ -6,7 +6,7 @@ exports.run = async (bot, msg, args) => {
 
 exports.info = {
 	name: 'choose',
-	usage: 'choose <foo|bar|...>',
 	description: 'Makes a choice for you',
+	usage: 'choose <foo|bar|...>',
 	level: []
 }
