@@ -27,19 +27,8 @@ class DiscordClient extends DiscordJs.Client {
 	}
 
 	async refreshBotChannels() {
-		let hfeedChannels = [];
-		let ladderChannels = [];
-		await Object.keys(this.channels).forEach((k, v) => {
-			let channel = this.getChannel(String(k));
-			if (channel.name === 'chan_de_bot') {
-				hfeedChannels.push(channel);
-			}
-			if (channel.name === 'ladder') {
-				ladderChannels.push(channel);
-			}
-		});
-		this.hfeed.channels = hfeedChannels;
-		this.Stats.channels = ladderChannels;
+		this.hfeed.channels = this.channels.findAll('name', 'chan_de_bot');
+		this.Stats.channels = this.channels.findAll('name', 'ladder');
 	}
 }
 
