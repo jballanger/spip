@@ -3,86 +3,32 @@ const dateFormat = require('dateformat');
 dateFormat('dddd, mmmm dS, yyyy, HH:MM:ss');
 
 exports.run = async (bot, msg, args) => {
-	let guild = msg.channel.guild;
-	let member = guild.members.get(args[0]) || (msg.mentions[0] && guild.members.get(msg.mentions[0].id));
-	if (!member) {
-		throw 'That user could not be found.';
-	}
+	let id = msg.mentions.users.size > 0 ? msg.mentions.users.firstKey() : args[0];
+	let member = id ? msg.channel.guild.members.find('id', id) : null;
+	if (!member) throw 'That user could not be found.';
 
-	let game = (member && member.game) ? member.game.name : 'Not playing';
-	let roles = member.roles.map(function(role) {
-		let r = guild.roles.find(r => r.id === role);
-		return r.name;
-	});
-	roles.length > 0
-	? roles = roles.join(', ')
-	: roles = 'None';
-
-	let user = null;
-	await bot.database.getUser(msg.author, msg.channel.guild.id).then((u) => {user = u});
-	(await msg.channel.createMessage({
-		embed: bot.utils.embed(
-				`${member.username}#${member.discriminator}`,
-				`[Download avatar](${member.avatarURL})`,
-				[{
-					name: 'Status',
-					value: `${member.status}`,
-					inline: true
-				},
-				{
-					name: 'Game',
-					value: game,
-					inline: true
-				},
-				{
-					name: 'Level',
-					value: user.level,
-					inline: true
-				},
-				{
-					name: 'Exp',
-					value: `${user.exp}/${bot.Stats.formula(user.level + 1)}`,
-					inline: true
-				},
-				{
-					name: 'Points',
-					value: user.points,
-					inline: true
-				},
-				{
-					name: 'Rank',
-					value: user.rank,
-					inline: true
-				},
-				{
-					name: 'Created On',
-					value: `${dateFormat(member.createdAt)}`,
-					inline: true
-				},
-				{
-					name: 'Joined On',
-					value: `${dateFormat(member.joinedAt)}`,
-					inline: true
-				},
-				{
-					name: 'Roles',
-					value: roles
-				}],
-				{
-					footer: {
-						'text': `UserID ${member.id}`
-					},
-					thumbnail: {
-						url: member.avatarURL
-					}
-				}
-			)
-	}));
+	let userStats = null;
+	await bot.database.getUser(member.user, msg.channel.guild.id).then((u) => {userStats = u});
+	let embed = new bot.discord.RichEmbed()
+		.setTitle(`${member.user.username}#${member.user.discriminator}`)
+		.setDescription(member.user.avatarURL ? `[Download avatar](${member.user.avatarURL})` : '')
+		.setFooter(member.id)
+		.setThumbnail(member.user.avatarURL)
+		.addField('Status', member.presence.status, true)
+		.addField('Game', member.presence.status.game ? member.presence.status.game.name : 'Not playing', true)
+		.addField('Level', userStats.level, true)
+		.addField('Exp', `${userStats.exp}/${bot.Stats.formula(userStats.level + 1)}`, true)
+		.addField('Points', userStats.points, true)
+		.addField('Rank', userStats.rank, true)
+		.addField('Created at', dateFormat(member.user.createdAt), true)
+		.addField('Joined at', dateFormat(member.joinedAt), true)
+		.addField('Roles', member.roles.filter(r => r.name !== '@everyone').map(r => r.name).join(', ') || 'None');
+	await msg.channel.send({embed: embed});
 }
 
 exports.info = {
 	name: 'fetch',
-	usage: 'fetch <uid|@user>',
 	description: 'Shows info about a user',
+	usage: 'fetch <uid|@user>',
 	level: ['Admin', 'Staff']
 }
