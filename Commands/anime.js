@@ -3,63 +3,27 @@ const htmlToText = require('html-to-text');
 
 exports.run = async (bot, msg, args) => {
 	var search = args.join(' ');
-	await bot.chinmei.searchSingleAnime(search).then((anime) => {
+	await bot.chinmei.searchSingleAnime(search).then(async (anime) => {
 		var malUrl = 'https://myanimelist.net/anime/';
 		if (!anime) {
 			throw  [42, 'That anime could not be found.'];
 		}
 
 		let synopsis = htmlToText.fromString(anime.synopsis, {ignoreHref: true}).replace(/\[(.+?)\]/g, '').replace(/\n/g, ' ');
-		msg.channel.createMessage({
-			embed: bot.utils.embed(
-				anime.title,
-				anime.english.length > 0 ? `(${anime.english})` : '',
-				[{
-					name: 'Episodes',
-					value: anime.episodes === 0 ? 'Unknow' : String(anime.episodes),
-					inline: true					
-				},
-				{
-					name: 'Type',
-					value: String(anime.type),
-					inline: true
-				},
-				{
-					name: 'Status',
-					value: String(anime.status),
-					inline: true
-				},
-				{
-					name: 'Score',
-					value: String(anime.score),
-					inline: true
-				},
-				{
-					name: 'Start date',
-					value: String(anime.start_date),
-					inline: true
-				},
-				{
-					name: 'End date',
-					value: anime.end_date === '0000-00-00' ? 'Unknow' : String(anime.end_date),
-					inline: true
-				},
-				{
-					name: 'Synopsis',
-					value: `${synopsis.substr(0, 500)}${synopsis.length > 500 ? '[...]' : ''}`
-				}],
-				{
-					url: `${malUrl}${anime.id}/`,
-					footer: {
-						text: 'MyAnimeList',
-						icon_url: 'https://myanimelist.cdn-dena.com/images/faviconv5.ico'
-					},
-					thumbnail: {
-						url: anime.image
-					}
-				}
-			)
-		});
+		let embed = new bot.discord.RichEmbed()
+			.setTitle(anime.title)
+			.setDescription(anime.english.length > 0 ? `(${anime.english})` : '')
+			.setURL(`${malUrl}${anime.id}/`)
+			.setThumbnail(anime.image)
+			.setFooter('MyAnimeList', 'https://myanimelist.cdn-dena.com/images/faviconv5.ico')
+			.addField('Episodes', anime.episodes === 0 ? 'Unknow' : String(anime.episodes), true)
+			.addField('Type', anime.type, true)
+			.addField('Status', anime.status, true)
+			.addField('Score', anime.score, true)
+			.addField('Start date', anime.start_date, true)
+			.addField('End date', anime.end_date === '0000-00-00' ? 'Unknow' : anime.end_date, true)
+			.addField('Synopsis', `${synopsis.substr(0, 500)}${synopsis.length > 500 ? '[...]' : ''}`);
+		await msg.channel.send({embed: embed});
 	}).catch((err) => {
 		if (err[0] && err[0] === 42) {
 			throw err[1];
