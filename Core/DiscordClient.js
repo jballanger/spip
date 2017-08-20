@@ -24,7 +24,7 @@ class DiscordClient extends DiscordJs.Client {
 		await this.hfeed.init();
 		await this.refreshBotChannels();
 		await this.Stats.updateLadder();
-		this.channels.find('name', 'musique').send('Bonsoir :^)');
+		this.channels.find('name', 'musique').send('Bonsoir :^)/');
 	}
 
 	async refreshBotChannels() {
