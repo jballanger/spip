@@ -5,7 +5,7 @@ class MusicManager {
 	constructor(client) {
 		this.client = client;
 		this.queue = new this.client.discord.Collection();
-		this.youtube = new youtube('YT_API_KEY');
+		this.youtube = new youtube(_config.youtube.apikey);
 	}
 
 	addSong(data) {
@@ -32,13 +32,15 @@ class MusicManager {
 			this.play(video, data, queue);
 		}).catch(() => {
 			this.youtube.searchVideos(data.url, 1).then((videos) => {
-				this.youtube.getVideoById(videos[0].id).then((video) => {
+				this.youtube.getVideoByID(videos[0].id).then((video) => {
 					this.play(video, data, queue);
 				}).catch(() => {
 					data.textChannel.send('Couldn\'t obtain the search result video\'s details.');
+					this.rearrange(queue);
 				});
-			}).catch(() => {
+			}).catch((e) => {
 				data.textChannel.send('There were no search results.');
+				this.rearrange(queue);
 			});
 		});
 	}
