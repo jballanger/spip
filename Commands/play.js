@@ -10,7 +10,7 @@ exports.run = (bot, msg, args) => {
 	voiceChannel.join().then(connection => {
 		let data = {
 			url: url,
-			author: msg.author,
+			msg: msg,
 			guildId: msg.channel.guild.id,
 			textChannel: msg.channel,
 			connection: connection
