@@ -22,6 +22,7 @@ class MusicManager {
 		else {
 			let size = guildQueue.size;
 			guildQueue.set(size + 1, data);
+			data.msg.reply(':thumbsup: Your song was added to the queue !');
 		}
 	}
 
@@ -35,18 +36,18 @@ class MusicManager {
 				this.youtube.getVideoByID(videos[0].id).then((video) => {
 					this.play(video, data, queue);
 				}).catch(() => {
-					data.textChannel.send('Couldn\'t obtain the search result video\'s details.');
+					data.msg.reply(`Couldn\'t obtain the search result video\'s details for *${data.url}*.`);
 					this.rearrange(queue);
 				});
-			}).catch((e) => {
-				data.textChannel.send('There were no search results.');
+			}).catch(() => {
+				data.msg.reply(`There were no search results for *${data.url}*.`);
 				this.rearrange(queue);
 			});
 		});
 	}
 
 	play(video, data, queue) {
-		const playing = data.textChannel.send(`:musical_note: Now playing ${video.title}, by ${data.author.username}`);
+		const playing = data.textChannel.send(`:musical_note: Now playing ${video.title}, by ${data.msg.author.username}`);
 		let streamError = false;
 		const stream = ytdl(video.url, {audioonly: true})
 			.on('error', err => {
