@@ -47,7 +47,8 @@ exports.parser = (args) => {
 }
 
 exports.getHours = (date) => {
-	let h = date.getHours();
+	let h = date.getHours() + 2;
+	if (h > 23) h = h - 24;
 	return (h < 10 ? '0'+h : h);
 }
 
