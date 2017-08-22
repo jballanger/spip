@@ -46,6 +46,12 @@ exports.parser = (args) => {
 	});
 }
 
+exports.validYoutubeUrl = (url) => {
+	var regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=|\?v=)([^#\&\?]*).*/;
+	var match = url.match(regExp);
+	return (match && match[2].length == 11) ? 1 : 0;
+}
+
 exports.getHours = (date) => {
 	let h = date.getHours() + 2;
 	if (h > 23) h = h - 24;
