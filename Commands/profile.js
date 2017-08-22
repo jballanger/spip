@@ -3,7 +3,7 @@ Canvas.registerFont('Misc/OpenSans-Regular.ttf', {family: 'Open Sans'});
 
 exports.run = async (bot, msg) => {
 	if (!bot.database.use) throw 'This command is actually unavailable';
-	let profileUser = msg.mentions.length > 0 ? msg.mentions[0] : msg.author;
+	let profileUser = msg.mentions.users.size > 0 ? msg.mentions.users.first() : msg.author;
 	await bot.database.getUser(profileUser, msg.channel.guild.id).then((u) => {user = u});
 	user.exp =  bot.Stats.getExpPercent(user.level, user.exp);
 	let backgrounds = [
@@ -14,7 +14,6 @@ exports.run = async (bot, msg) => {
 		'http://orig08.deviantart.net/fe76/f/2015/131/2/c/anime_school__6_by_shamelessbeauty3-d8szdgt.png',
 
 	];
-	let url = user.background || backgrounds[bot.utils.randomNumber(0, backgrounds.length)];
 	let badges = [
 		'http://www.p-pokemon.com/images-pokemon-actualite/pict_champions-arene-pokemon-rubis-omega-saphir-alpha_17564_18_.png',
 		'http://www.p-pokemon.com/images-pokemon-actualite/pict_champions-arene-pokemon-rubis-omega-saphir-alpha_17552_6_.png',
@@ -25,8 +24,9 @@ exports.run = async (bot, msg) => {
 		'http://www.p-pokemon.com/images-pokemon-actualite/pict_champions-arene-pokemon-rubis-omega-saphir-alpha_17574_28_.png',
 		'http://www.p-pokemon.com/images-pokemon-actualite/pict_champions-arene-pokemon-rubis-omega-saphir-alpha_17583_37_.png'
 	];
-	let url2 = badges[bot.utils.randomNumber(0, badges.length)];
-	bot.utils.loadImageUrl(url, profileUser.avatarURL, url2).then(async (images) => {
+	let background_url = user.background || backgrounds[bot.utils.randomNumber(0, backgrounds.length)];
+	let badge_url = badges[bot.utils.randomNumber(0, badges.length)];
+	bot.utils.loadImageUrl(background_url, badge_url, profileUser.avatarURL).then(async (images) => {
 		let profile = new Canvas(360, 120);
 		let ctx = profile.getContext('2d');
 		ctx.drawImage(images[0], 0, 0, 360, 120);
@@ -61,13 +61,10 @@ exports.run = async (bot, msg) => {
 		ctx.font = '10px "Open Sans"';
 		ctx.fillText(user.exp+'%', 310, 48);
 		ctx.globalAlpha = 1;
-		ctx.drawImage(images[1], 22, 28, 64, 64);
-		ctx.drawImage(images[2], 310, 10, 24, 24)
+		ctx.drawImage(images[1], 310, 10, 24, 24);
+		ctx.drawImage(images[2], 22, 28, 64, 64);
 		let result = await profile.toBuffer();
-		(await msg.channel.createMessage({}, {
-			file: result,
-			name: 'ptest.png'
-		}));
+		await msg.channel.send({file: {attachment: result, name: `${user.username}.png`}});
 	}).catch((e) => {
 		throw e;
 	});
