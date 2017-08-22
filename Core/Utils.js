@@ -45,3 +45,13 @@ exports.parser = (args) => {
 			resolve({options: options, args: args});
 	});
 }
+
+exports.getHours = (date) => {
+	let h = date.getHours();
+	(h < 10) ? return ('0'+h) : return (h);
+}
+
+exports.getMinutes = (date) => {
+	let m = date.getMinutes();
+	(m < 10) ? return ('0'+m) : return (m);
+}
