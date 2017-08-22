@@ -34,7 +34,9 @@
     "request": "2.81.0",
     "require-stack": "1.0.2",
     "sequelize": "^4.4.2",
+    "simple-youtube-api": "3.0.0",
     "sodium": "^2.0.1",
-    "uws": "^0.14.5"
+    "uws": "^0.14.5",
+    "ytdl-core": "0.16.0"
   }
 }
