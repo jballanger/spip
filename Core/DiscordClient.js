@@ -16,6 +16,7 @@ class DiscordClient extends DiscordJs.Client {
 		this.deleted = new DiscordJs.Collection();
 		this.chinmei = new Chinmei(_config.myanimelist.username, _config.myanimelist.password);
 		this.Stats = new core.Stats(this);
+		this.musicManager = new core.MusicManager(this);
 	}
 
 	async init() {
