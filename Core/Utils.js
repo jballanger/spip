@@ -48,10 +48,10 @@ exports.parser = (args) => {
 
 exports.getHours = (date) => {
 	let h = date.getHours();
-	(h < 10) ? return ('0'+h) : return (h);
+	return (h < 10 ? '0'+h : h);
 }
 
 exports.getMinutes = (date) => {
 	let m = date.getMinutes();
-	(m < 10) ? return ('0'+m) : return (m);
+	return (m < 10 ? '0'+m : m);
 }
