@@ -6,6 +6,8 @@ class MusicManager {
 		this.client = client;
 		this.queue = new this.client.discord.Collection();
 		this.youtube = new youtube(_config.youtube.apikey);
+		this.voiceChannels = new this.client.discord.Collection();
+		this.dispatcher = new this.client.discord.Collection();
 	}
 
 	addSong(data) {
@@ -27,7 +29,7 @@ class MusicManager {
 	}
 
 	checkQueue(queue) {
-		if (queue.size < 1) return ;
+		if (queue.size < 1) return this.client.setTimeout(this.leaveChannels(), 15000);
 		let data = queue.first();
 		this.youtube.getVideo(data.url).then((video) => {
 			this.play(video, data, queue);
@@ -55,25 +57,37 @@ class MusicManager {
 				console.error(`Error occured while streaming video: ${err}`);
 				playing.edit('Coulnd\'t play ${video.title}, unlucky :^)');
 				this.rearrange(queue);
-				this.checkQueue(queue);
 			});
 		const dispatcher = data.connection.playStream(stream, {passes: 1})
 			.on('end', () => {
 				if (streamError) return ;
 				this.rearrange(queue);
-				this.checkQueue(queue);
 			})
 			.on ('error', err => {
 				console.error(`Error occured in dispatcher: ${err}`);
 				data.textChannel.send('An error occured while playing ${video.title}, try again :^)');
 				this.rearrange(queue);
-				this.checkQueue(queue);
 			});
+		this.voiceChannels.set(data.guildId, data.connection.channel);
+		this.dispatcher.set(data.guildId, dispatcher);
 	}
 
-	rearrange(queue) {
-		queue.delete(1);
-		queue.map(k => k = k - 1);
+	async rearrange(queue) {
+		await queue.forEach((e, k, map) => {
+			let elem = map.get(k + 1);
+			elem ? map.set(k, elem) : map.delete(k);
+		});
+		this.checkQueue(queue);
+	}
+
+	leaveChannels() {
+		this.queue.forEach(async (e, k, map) => {
+			if (e.size < 1) {
+				await this.voiceChannels.get(k).leave();
+				this.voiceChannels.delete(k);
+				map.delete(k);
+			}
+		});
 	}
 }
 
