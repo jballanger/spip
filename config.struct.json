@@ -2,7 +2,10 @@
 	"discord": {
 		"token": "",
 		"prefix": "",
-		"game": ""
+		"game": "",
+		"shop": {
+			"background": ""
+		}
 	},
 	"database": {
 		"postgres": {
@@ -18,5 +21,8 @@
 	},
 	"hinata_feed": {
 		"channel": ""
+	},
+	"youtube": {
+		"apikey": ""
 	}
 }
