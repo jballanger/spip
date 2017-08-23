@@ -16,7 +16,7 @@ class MusicManager {
 		}
 		let queueSong = guildQueue.first();
 		if (!queueSong) {
-			guildQueue.set('1', data);
+			guildQueue.set(1, data);
 			this.checkQueue(guildQueue);
 		}
 		else {
@@ -47,7 +47,7 @@ class MusicManager {
 	}
 
 	play(video, data, queue) {
-		const playing = data.textChannel.send(`:musical_note: Now playing ${video.title}, by ${data.msg.author.username}`);
+		let playing = data.textChannel.send(`:musical_note: Now playing ${video.title}, by ${data.msg.author.username}`);
 		let streamError = false;
 		const stream = ytdl(video.url, {audioonly: true})
 			.on('error', err => {
@@ -72,7 +72,7 @@ class MusicManager {
 	}
 
 	rearrange(queue) {
-		queue.delete('1');
+		queue.delete(1);
 		queue.map(k => k = k - 1);
 	}
 }
