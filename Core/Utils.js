@@ -32,6 +32,13 @@ exports.loadImageUrl = (...urls) => {
 	});
 }
 
+exports.uploadImage = (url, uid) => {
+	request.post(_config.image_hosting.url, {form: {url: url, uid, uid}}, (err, res, body) => {
+		if (err) throw err;
+		return (body);
+	});
+}
+
 exports.parser = (args) => {
 	return new Promise(async (resolve, reject) => {
 		let options = [];
