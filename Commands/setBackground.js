@@ -8,7 +8,8 @@ exports.run = async (bot, msg, args) => {
 	if (user.points < price) throwToUser(`${price} points are needed to change profile background.`);
 	let url = args[0];
 	if (!url.endsWith('.png') && !url.endsWith('.jpg')) throwToUser('Please provide a png or jpg image');
-	let hostedUrl = await bot.utils.uploadImage(url, msg.author.id);
+	let hostedUrl;
+	await bot.utils.uploadImage(url, msg.author.id).then((res) => {hostedUrl = res});
 	bot.database.models.User.model.update({points: (user.points - price), background: hostedUrl}, {where: {uid: user.uid, gid: msg.channel.guild.id}}).then((row) => {
 		if (row[0] < 1) throw `${row[0]} rows were affected on ${user.uid}\'s background update.`;
 	});

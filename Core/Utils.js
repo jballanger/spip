@@ -33,9 +33,11 @@ exports.loadImageUrl = (...urls) => {
 }
 
 exports.uploadImage = (url, uid) => {
-	request.post(_config.image_hosting.url, {form: {url: url, uid, uid}}, (err, res, body) => {
-		if (err) throw err;
-		return (body);
+	return new Promise((resolve, reject) => {
+		request.post(_config.image_hosting.url, {form: {url: url, uid, uid}}, (err, res, body) => {
+			if (err) reject(err);
+			resolve(body);
+		});
 	});
 }
 
