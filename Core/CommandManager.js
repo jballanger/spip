@@ -85,7 +85,6 @@ class CommandManager {
 			return await command.run(this.bot, msg, args);
 		} catch (err) {
 			msg.reply(err);
-			console.log(err);
 			return null;
 		}
 	}
