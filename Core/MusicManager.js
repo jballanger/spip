@@ -29,7 +29,7 @@ class MusicManager {
 	}
 
 	checkQueue(queue) {
-		if (queue.size < 1) return this.client.setTimeout(this.leaveChannels(), 15000);
+		if (queue.size < 1) return this.client.setTimeout(this.leaveChannels, 15000);
 		let data = queue.first();
 		this.youtube.getVideo(data.url).then((video) => {
 			this.play(video, data, queue);
