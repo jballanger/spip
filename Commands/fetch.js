@@ -8,7 +8,7 @@ exports.run = async (bot, msg, args) => {
 	if (!member) throw 'That user could not be found.';
 
 	let userStats = null;
-	await bot.database.getUser(member.user, msg.channel.guild.id).then((u) => {userStats = u});
+	await bot.database.getUser(member.user, msg.channel.guild.id).then((u) => {userStats = u;});
 	let embed = new bot.discord.RichEmbed()
 		.setTitle(member.user.tag)
 		.setDescription(member.user.avatarURL ? `[Download avatar](${member.user.avatarURL})` : '')
@@ -24,11 +24,11 @@ exports.run = async (bot, msg, args) => {
 		.addField('Joined at', dateFormat(member.joinedAt), true)
 		.addField('Roles', member.roles.filter(r => r.name !== '@everyone').map(r => r.name).join(', ') || 'None');
 	await msg.channel.send({embed: embed});
-}
+};
 
 exports.info = {
 	name: 'fetch',
 	description: 'Shows info about a user',
 	usage: 'fetch <uid|@user>',
 	level: ['Admin', 'Staff']
-}
+};

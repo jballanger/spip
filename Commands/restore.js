@@ -23,4 +23,4 @@ exports.info = {
 	usage: 'restore <@user>',
 	description: 'Restore deleted messages from a user',
 	level: ['Admin', 'Staff']
-}
+};

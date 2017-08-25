@@ -36,7 +36,7 @@ class Database {
 	}
 
 	getUser(user, gid) {
-		return new Promise((resolve, reject) => {
+		return new Promise((resolve) => {
 			this.models.User.model.findOrCreate({
 				where: {
 					uid: user.id,
@@ -52,14 +52,14 @@ class Database {
 					points: '0',
 					background: ''
 				}
-			}).spread((user, created) => {
+			}).spread((user) => {
 				resolve(user.dataValues);
 			});
 		});
 	}
 
 	getAllUsers(gid) {
-		return new Promise((resolve, reject) => {
+		return new Promise((resolve) => {
 			resolve(this.models.User.model.findAll({where: {gid: gid}}));
 		});
 	}
@@ -80,8 +80,8 @@ class Database {
 	}
 
 	sleep(time) {
-		return new Promise((res, rej) => {
-			setTimeout(res, time);
+		return new Promise((resolve) => {
+			setTimeout(resolve, time);
 		});
 	}
 }

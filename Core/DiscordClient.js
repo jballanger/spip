@@ -1,7 +1,6 @@
 const core = require('./index.js');
 const DiscordJs = require('discord.js');
 const Chinmei = require('chinmei');
-const EventEmitter = require('eventemitter3');
 
 class DiscordClient extends DiscordJs.Client {
 	constructor() {

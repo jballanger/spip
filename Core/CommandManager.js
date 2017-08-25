@@ -1,7 +1,8 @@
 const chalk = require('chalk');
+const path = require('path');
 
 class CommandManager {
-	constructor(bot) {
+	constructor() {
 		this.bot = null;
 		this.commands = [];
 		this.prefix = _config.discord.prefix;

@@ -7,4 +7,4 @@ module.exports = {
 	MusicManager: require('./MusicManager'),
 	Stats: require('./Stats'),
 	Utils: require('./Utils')
-}
+};

@@ -38,7 +38,7 @@ class MusicManager {
 				this.youtube.getVideoByID(videos[0].id).then((video) => {
 					this.play(video, data, queue);
 				}).catch(() => {
-					data.msg.reply(`Couldn\'t obtain the search result video\'s details for *${data.url}*.`);
+					data.msg.reply(`Couldn't obtain the search result video's details for *${data.url}*.`);
 					this.rearrange(queue);
 				});
 			}).catch(() => {

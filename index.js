@@ -1,5 +1,5 @@
 process.on('unhandledRejection', (reason, p) => {
-  console.error('Unhandled Rejection at:', p, 'reason:', reason);
+	console.error('Unhandled Rejection at:', p, 'reason:', reason);
 });
 
 const chalk = require('chalk');

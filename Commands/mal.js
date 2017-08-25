@@ -22,14 +22,14 @@ exports.run = (bot, msg, args) => {
 			.addField('Plan to watch', u1.user_plantowatch, true)
 			.addField('Plan to read', u2.user_plantoread, true);
 		await msg.channel.send({embed: embed});
-	}).catch((e) => {
+	}).catch(() => {
 		throw 'User not found.';
 	});
-}
+};
 
 exports.info = {
 	name: 'mal',
 	description: 'Get informations about a MyAnimeList user',
 	usage: 'mal <user>',
 	level: []
-}
+};

@@ -17,11 +17,11 @@ exports.run = (bot, msg, args) => {
 		};
 		bot.musicManager.addSong(data);
 	});
-}
+};
 
 exports.info = {
 	name: 'play',
 	description: 'Add a music to the queue and start playing',
 	usage: 'play <youtube link | search>',
 	level: []
-}
+};

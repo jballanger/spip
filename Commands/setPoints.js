@@ -6,11 +6,11 @@ exports.run = (bot, msg, args) => {
 	bot.database.models.User.model.update({points: points}, {where: {uid: user.id, gid: msg.channel.guild.id}}).then((row) => {
 		if (row[0] < 1) throw `${row[0]} rows were affected`;
 	});
-}
+};
 
 exports.info = {
 	name: 'setpoints',
 	description: 'Change the number of points a user have',
 	usage: 'setpoints <@user> <points>',
 	level: ['Admin']
-}
+};

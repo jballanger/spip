@@ -16,11 +16,11 @@ exports.run = async (bot, msg, args) => {
 			});
 		}
 	});
-}
+};
 
 exports.info = {
 	name: 'setgame',
 	description: 'Change spip\'s game',
 	usage: 'setGame [--save] <game>',
 	level: ['Admin', 'Staff']
-}
+};

@@ -29,11 +29,11 @@ exports.run = async (bot, msg, args) => {
 			throw 'Something wrong happened, please contact an Admin.';
 		}
 	});
-}
+};
 
 exports.info = {
 	name: 'anime',
 	description: 'Get details of an anime from MyAnimeList',
 	usage: 'anime <search>',
 	level: []
-}
+};
