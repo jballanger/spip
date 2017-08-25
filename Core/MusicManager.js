@@ -29,7 +29,7 @@ class MusicManager {
 	}
 
 	checkQueue(queue) {
-		if (queue.size < 1) return this.client.setTimeout(this.leaveChannels, 15000);
+		if (queue.size < 1) return this.client.setTimeout(this.leaveChannels, 15000, this);
 		let data = queue.first();
 		this.youtube.getVideo(data.url).then((video) => {
 			this.play(video, data, queue);
@@ -80,11 +80,11 @@ class MusicManager {
 		this.checkQueue(queue);
 	}
 
-	leaveChannels() {
-		this.queue.forEach(async (e, k, map) => {
+	leaveChannels(client) {
+		client.queue.forEach(async (e, k, map) => {
 			if (e.size < 1) {
-				await this.voiceChannels.get(k).leave();
-				this.voiceChannels.delete(k);
+				await client.voiceChannels.get(k).leave();
+				client.voiceChannels.delete(k);
 				map.delete(k);
 			}
 		});
