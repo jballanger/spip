@@ -16,6 +16,10 @@ const DiscordClient = require('./Core/DiscordClient.js');
 
 var bot = new DiscordClient();
 
+bot.on('warn', console.warn);
+
+bot.on('error', console.error);
+
 bot.on('ready', async () => {
 	await bot.init();
 	await bot.commands.init(bot);
@@ -28,17 +32,7 @@ bot.on('message', (msg) => {
 	bot.commands.handleCommand(msg, msg.content);
 });
 
-bot.on('messageDelete', (msg) => {
-	bot.deleted.set(msg.id, msg);
-});
-
-bot.on('warn', (err) => {
-	console.error(`${chalk.yellow('WARN')}: ${err}`);
-});
-
-bot.on('shardDisconnect', (error, shard) => {
-	console.error(chalk.red(`Shard ${shard} disconnected :`, error));
-});
+bot.on('messageDelete', (msg) => bot.deleted.set(msg.id, msg));
 
 bot.hfeed.on('update', (data, i) => {
 	bot.hfeed.channels.forEach((channel) => {
