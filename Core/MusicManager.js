@@ -8,12 +8,14 @@ class MusicManager {
 		this.youtube = new youtube(_config.youtube.apikey);
 		this.voiceChannels = new this.client.discord.Collection();
 		this.dispatcher = new this.client.discord.Collection();
+		this.volume = new this.client.discord.Collection();
 	}
 
 	addSong(data) {
 		let guildQueue = this.queue.get(data.guildId);
 		if (!guildQueue) {
 			this.queue.set(data.guildId, new this.client.discord.Collection());
+			this.volume.set(data.guildId, 5);
 			guildQueue = this.queue.get(data.guildId);
 		}
 		let queueSong = guildQueue.first();
@@ -49,7 +51,7 @@ class MusicManager {
 	}
 
 	play(video, data, queue) {
-		let playing = data.textChannel.send(`:musical_note: Now playing ${video.title}, by ${data.msg.author.username}`);
+		let playing = data.textChannel.send(`:musical_note: Now playing **${video.title}**, by ${data.msg.author.username}`);
 		let streamError = false;
 		const stream = ytdl(video.url, {audioonly: true})
 			.on('error', err => {
@@ -68,6 +70,7 @@ class MusicManager {
 				data.textChannel.send('An error occured while playing ${video.title}, try again :^)');
 				this.rearrange(queue);
 			});
+		dispatcher.setVolumeLogarithmic(this.volume.get(data.guildId) / 5);
 		this.voiceChannels.set(data.guildId, data.connection.channel);
 		this.dispatcher.set(data.guildId, dispatcher);
 	}
