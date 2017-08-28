@@ -1,6 +1,6 @@
 const fs = require('fs');
 const chalk = require('chalk');
-var config = require('../config.json');
+var config = _config;
 
 exports.run = async (bot, msg, args) => {
 	bot.utils.parser(args).then(async (parser) => {

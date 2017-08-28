@@ -8,7 +8,7 @@ exports.run = (bot, msg, args) => {
 		newVolume = args[0].toLowerCase();
 		if (newVolume === 'up' || newVolume === '+') newVolume = currentVolume + 2;
 		else if (newVolume === 'down' || newVolume === '-') newVolume = currentVolume - 2;
-		else return (msg.reply(`Invalid volume.`));
+		else return (msg.reply('Invalid volume.'));
 	}
 	if (newVolume > 10) newVolume = 10;
 	if (newVolume < 1) newVolume = 1;
