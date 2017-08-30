@@ -43,6 +43,10 @@ class UserModel {
 			background: {
 				type: this.Sequelize.STRING(256),
 				allowNull: true
+			},
+			punisher: {
+				type: this.Sequelize.BIGINT,
+				allowNull: false
 			}
 		});
 	}

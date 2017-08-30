@@ -9,6 +9,7 @@ class DiscordClient extends DiscordJs.Client {
 		this.discord = DiscordJs;
 		this.hfeed = new core.HinataFeed();
 		this.database = new core.Database();
+		this.educator = new core.Educator(this, 'Misc/wlist.txt');
 		this.importManager = new core.ImportManager(__dirname);
 		this.commands = new core.CommandManager();
 		this.utils = core.Utils;

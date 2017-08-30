@@ -28,6 +28,15 @@ bot.on('ready', async () => {
 
 bot.on('message', (msg) => {
 	if (msg.author.id === bot.user.id) return ;
+	if (!['Admin', 'Staff'].some(e => msg.member.roles.exists('name', e))) {
+		let words = msg.content.split(' ');
+		words.forEach((word) => {
+			if (bot.educator.isBad(word)) {
+				bot.educator.punish(msg.member, msg);
+				return ;
+			}
+		});
+	}
 	if (!msg.content.startsWith(bot.commands.prefix)) bot.Stats.updateStats(msg);
 	bot.commands.handleCommand(msg, msg.content);
 });
