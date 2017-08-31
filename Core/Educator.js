@@ -8,8 +8,8 @@ class Educator {
 
 	loadList(path) {
 		fs.readFile(path, (err, data) => {
-			if (err) return console.error(err);
-			this.wlist = data.toString().split('\n');
+			if (err) console.error(err);
+			else this.wlist = data.toString().split('\n');
 		});
 	}
 
