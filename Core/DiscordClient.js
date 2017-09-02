@@ -9,7 +9,7 @@ class DiscordClient extends DiscordJs.Client {
 		this.discord = DiscordJs;
 		this.hfeed = new core.HinataFeed();
 		this.database = new core.Database();
-		this.educator = new core.Educator(this, 'Misc/wlist.txt');
+		this.educator = new core.Educator(this);
 		this.importManager = new core.ImportManager(__dirname);
 		this.commands = new core.CommandManager();
 		this.utils = core.Utils;
@@ -22,6 +22,7 @@ class DiscordClient extends DiscordJs.Client {
 	async init() {
 		this.user.setGame(_config.discord.game);
 		await this.database.authenticate();
+		await this.educator.loadList('Misc/wlist.txt');
 		await this.hfeed.init();
 		await this.refreshBotChannels();
 		await this.Stats.updateLadder();
