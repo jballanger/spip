@@ -12,8 +12,9 @@ class Educator {
 
 	isBad(content) {
 		if (!this.wlist) return (0);
+		let str = content.toLowerCase().replace(/\s+/g, ' ');
 		return this.wlist.some((e) => {
-			return content.indexOf(e) !== -1;
+			return str.indexOf(e) !== -1;
 		});
 	}
 
