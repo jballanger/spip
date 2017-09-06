@@ -43,6 +43,7 @@ exports.uploadImage = (url, uid) => {
 exports.parser = (args) => {
 	return new Promise(async (resolve) => {
 		let options = [];
+		if (args.length < 1) resolve({options: options, args: args});
 		while (args[0].startsWith('-')) {
 			options.push(args[0]);
 			args = args.slice(1);
