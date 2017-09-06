@@ -5,6 +5,7 @@ exports.run = (bot, msg, args) => {
 	if (!level) throw 'Invalid level';
 	bot.database.models.User.model.update({level: level}, {where: {uid: user.id, gid: msg.channel.guild.id}}).then((row) => {
 		if (row[0] < 1) throw `${row[0]} rows were affected`;
+		else msg.reply(`<@${user.id}>'s level is now ${level}`);
 	});
 };
 

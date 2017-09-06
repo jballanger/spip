@@ -13,6 +13,7 @@ exports.run = async (bot, msg, args) => {
 	if (!hostedUrl.startsWith('http://')) throw hostedUrl;
 	bot.database.models.User.model.update({points: (user.points - price), background: hostedUrl}, {where: {uid: user.uid, gid: msg.channel.guild.id}}).then((row) => {
 		if (row[0] < 1) throw `${row[0]} rows were affected on ${user.uid}'s background update.`;
+		else msg.reply('Background successfully set !');
 	});
 };
 
