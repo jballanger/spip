@@ -6,7 +6,7 @@ exports.run = async (bot, msg) => {
 	let profileUser = msg.mentions.users.size > 0 ? msg.mentions.users.first() : msg.author;
 	let user = null;
 	await bot.database.getUser(profileUser, msg.channel.guild.id).then((u) => {user = u;});
-	user.exp =  bot.Stats.getExpPercent(user.level, user.exp);
+	user.exp =  bot.stats.getExpPercent(user.level, user.exp);
 	let backgrounds = [
 		'http://img04.deviantart.net/793d/i/2016/009/e/1/background_anime_1_by_al00ndr44-d9nd73s.png',
 		'http://img12.deviantart.net/75f8/i/2016/234/9/0/anime_background_by_nieris-daeuy2n.png',
