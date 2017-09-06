@@ -5,6 +5,7 @@ class CommandManager {
 	constructor() {
 		this.bot = null;
 		this.commands = [];
+		this.channels = [];
 		this.prefix = _config.discord.prefix;
 	}
 	
@@ -13,10 +14,42 @@ class CommandManager {
 		console.log(chalk.yellow('Loading commands..'));
 		await this.loadCommands();
 		console.log(chalk.blue(`${this.commands.length} commands loaded !`));
+		await this.listCommands();
 	}
 
 	get(name) {
 		return this.commands.find(c => c.info['name'] === name);
+	}
+
+	sortCommands(a, b) {
+		if (a.info.level.length < b.info.level.length)
+			return 1;
+		if (a.info.level.length > b.info.level.length)
+			return -1;
+		return 0;
+	}
+
+	listCommands() {
+		this.channels.forEach(async (channel) => {
+			await this.commands.sort(this.sortCommands);
+			let content = '';
+			let currentLevel = undefined;
+			await this.commands.forEach((command) => {
+				if (!currentLevel || (currentLevel !== command.info.level.join(', ') && currentLevel !== 'General')) {
+					if (command.info.level.length < 1) currentLevel = 'General';
+					else currentLevel = command.info.level.join(', ');
+					content += `\n**[${currentLevel}]** commands\n`;
+				}
+				content += `__${command.info.name}__ - ${command.info.description}\n`;
+			});
+			channel.fetchMessages({limit: 1}).then((messages) => {
+				let message = messages.first();
+				if (message && message.author.id === this.bot.user.id) {
+					message.edit(content);
+				}
+				else channel.send(content);
+			});
+		});
 	}
 
 	loadCommands() {

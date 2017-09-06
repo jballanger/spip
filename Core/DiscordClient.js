@@ -15,7 +15,7 @@ class DiscordClient extends DiscordJs.Client {
 		this.utils = core.Utils;
 		this.deleted = new DiscordJs.Collection();
 		this.chinmei = new Chinmei(_config.myanimelist.username, _config.myanimelist.password);
-		this.Stats = new core.Stats(this);
+		this.stats = new core.Stats(this);
 		this.musicManager = new core.MusicManager(this);
 	}
 
@@ -25,12 +25,13 @@ class DiscordClient extends DiscordJs.Client {
 		await this.educator.loadList('Misc/wlist.txt');
 		await this.hfeed.init();
 		await this.refreshBotChannels();
-		await this.Stats.updateLadder();
+		await this.stats.updateLadder();
 	}
 
 	async refreshBotChannels() {
 		this.hfeed.channels = this.channels.findAll('name', 'chan_de_bot');
-		this.Stats.channels = this.channels.findAll('name', 'ladder');
+		this.stats.channels = this.channels.findAll('name', 'ladder');
+		this.commands.channels = this.channels.findAll('name', 'spip');
 	}
 }
 
