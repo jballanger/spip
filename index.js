@@ -45,7 +45,8 @@ bot.hfeed.on('update', (data, i) => {
 		let embed = new bot.discord.RichEmbed()
 			.setTitle(data.title)
 			.setDescription(bot.hfeed.messages[i])
-			.setURL(data.link);
+			.setURL(data.link)
+			.setColor(bot.utils.randomColor());
 		channel.send({embed: embed});
 	});
 });

@@ -5,6 +5,7 @@ exports.run = (bot, msg, args) => {
 	if (!points) throw 'Invalid number of points';
 	bot.database.models.User.model.update({points: points}, {where: {uid: user.id, gid: msg.channel.guild.id}}).then((row) => {
 		if (row[0] < 1) throw `${row[0]} rows were affected`;
+		else msg.reply(`<@${user.id}> now got ${points} points.`);
 	});
 };
 
