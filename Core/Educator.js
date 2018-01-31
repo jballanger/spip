@@ -1,3 +1,4 @@
+const chalk = require('chalk');
 const fs = require('fs');
 
 class Educator {
@@ -6,8 +7,14 @@ class Educator {
 	}
 
 	loadList(path) {
-		let content = fs.readFileSync(path).toString();
-		this.wlist = content.split('\n').filter(String);
+		let content = null;
+		try {
+			content = fs.readFileSync(path).toString();
+		} catch (err) {
+			if (err.code === 'ENOENT') console.log(chalk.yellow('Not using Educator (wlist not found)'));
+			else console.log(chalk.yellow(`Not using Educator (${err.code} => ${err.message})`));
+		}
+		this.wlist = content ? content.split('\n').filter(String) : null;
 	}
 
 	isBad(content) {

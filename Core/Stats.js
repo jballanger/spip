@@ -1,3 +1,5 @@
+const chalk = require('chalk');
+
 class Stats {
 	constructor(client) {
 		this.client = client;
@@ -64,6 +66,9 @@ class Stats {
 	}
 
 	updateLadder() {
+		if (!this.client.database.use) {
+			return (console.log(chalk.yellow('Not updating ladder (Database not used)')));
+		}
 		this.channels.forEach((channel) => {
 			this.client.database.getAllUsers(channel.guild.id).then(async (users) => {
 				await users.sort(this.sortLadder);
@@ -87,6 +92,7 @@ class Stats {
 				});
 			});
 		});
+		console.log(chalk.blue('Ladder updated for every channels !'));
 	}
 
 	refreshLadder() {
