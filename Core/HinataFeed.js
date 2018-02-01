@@ -2,7 +2,7 @@ const chalk = require('chalk');
 const request = require('request');
 const EventEmitter = require('eventemitter3');
 
-class HinataFeed extends EventEmitter{
+class HinataFeed extends EventEmitter {
   constructor() {
     super();
     this.source = 'https://hinata-online-community.fr/wp-content/themes/hinata_v6/bot.json';
@@ -13,7 +13,7 @@ class HinataFeed extends EventEmitter{
       '',
       'Nouvel anime !',
       ':tada: Welcome & good luck :^) :tada:',
-      'Nouveau Zoom Anime !'
+      'Nouveau Zoom Anime !',
     ];
   }
 
@@ -29,14 +29,12 @@ class HinataFeed extends EventEmitter{
 
   getFeed() {
     return new Promise((resolve, reject) => {
-      request({url: this.source, json: true}, (err, res, body) => {
+      request({ url: this.source, json: true }, (err, res, body) => {
         if (err) reject(err);
         if (res && res.statusCode === 200) {
-          resolve(body);
-        } else {
-          if (res) reject(new Error(res.body+'\n'+res.statusCode));
-          else reject(new Error('res is undefined'));
-        }
+          if (res.statusCode === 200) resolve(body);
+          else reject(new Error(`${res.body}\n${res.statusCode}`));
+        } else reject(new Error('res is undefined'));
       });
     });
   }

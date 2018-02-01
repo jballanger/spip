@@ -47,10 +47,10 @@ class DiscordClient extends DiscordJs.Client {
     this.hfeed.on('update', (data, i) => {
       this.hfeed.channels.forEach((channel) => {
         const embed = new this.discord.RichEmbed()
-        .setTitle(data.title)
-        .setDescription(this.hfeed.messages[i])
-        .setURL(data.link)
-        .setColor(this.utils.randomColor());
+          .setTitle(data.title)
+          .setDescription(this.hfeed.messages[i])
+          .setURL(data.link)
+          .setColor(this.utils.randomColor());
         channel.send({ embed });
       });
     });
