@@ -118,7 +118,10 @@ class CommandManager {
     try {
       return await command.run(this.bot, msg, args);
     } catch (err) {
-      msg.reply(err);
+      if (typeof err !== 'string') {
+        msg.reply('Something wrong happened..');
+        console.log(err);
+      } else msg.reply(err);
       return null;
     }
   }
