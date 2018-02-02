@@ -1,19 +1,21 @@
 const chalk = require('chalk');
-const sequelize = require('sequelize');
+const Sequelize = require('sequelize');
 
 class Database {
   constructor() {
-    this.use = _config.database.mysql.host ? true : false;
-    this.sequelize = new sequelize(_config.database.mysql.database,
+    this.use = _config.database.mysql.host;
+    this.sequelize = new Sequelize(
+      _config.database.mysql.database,
       _config.database.mysql.user,
       _config.database.mysql.pass, {
         host: _config.database.mysql.host,
         dialect: 'mysql',
         logging: false,
         define: {
-          timestamps: false
-        }
-      });
+          timestamps: false,
+        },
+      },
+    );
   }
 
   async authenticate() {
@@ -30,8 +32,8 @@ class Database {
       }
     } catch (err) {
       console.error(chalk.red(`Failed to connect to the database, retrying in 5 seconds..\n${err}`));
-      await this.sleep(5000);
-      return await this.authenticate();
+      await this.constructor.sleep(5000);
+      return this.authenticate();
     }
   }
 
@@ -39,35 +41,45 @@ class Database {
     return new Promise((resolve) => {
       this.models.User.model.findOrCreate({
         where: {
+          gid,
           uid: user.id,
-          gid: gid
         },
         defaults: {
+          gid,
           uid: user.id,
-          gid: gid,
           username: user.username,
           level: '0',
           exp: '0',
           rank: '999',
           points: '0',
           background: '',
-          punisher: '0'
-        }
-      }).spread((user) => {
-        resolve(user.dataValues);
+          punisher: '0',
+        },
+      }).spread((u) => {
+        resolve(u.dataValues);
       });
     });
   }
 
   getAllUsers(gid) {
     return new Promise((resolve) => {
-      resolve(this.models.User.model.findAll({where: {gid: gid}}));
+      resolve(this.models.User.model.findAll({
+        where: {
+          gid,
+        },
+      }));
     });
   }
 
   updateRank(id, rank) {
-    this.models.User.model.update({rank: rank}, {where: {id: id}}).then((row) => {
-      if (row[0] < 1) throw `${row[0]} rows were affected`;
+    this.models.User.model.update({
+      rank,
+    }, {
+      where: {
+        id,
+      },
+    }).then((row) => {
+      if (row[0] < 1) throw new Error(`${row[0]} rows were affected`);
     });
   }
 
@@ -80,7 +92,7 @@ class Database {
     }
   }
 
-  sleep(time) {
+  static sleep(time) {
     return new Promise((resolve) => {
       setTimeout(resolve, time);
     });
