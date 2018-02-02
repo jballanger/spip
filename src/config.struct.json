@@ -8,7 +8,7 @@
 		}
 	},
 	"database": {
-		"postgres": {
+		"mysql": {
 			"host": "",
 			"database": "",
 			"user": "",
@@ -24,5 +24,8 @@
 	},
 	"youtube": {
 		"apikey": ""
-	}
+	},
+  "educator": {
+    "wlist": ""
+  }
 }
