@@ -2,8 +2,6 @@ const chalk = require('chalk');
 const Sequelize = require('sequelize');
 const models = require('./Models');
 
-const { Op } = Sequelize;
-
 class Database {
   constructor() {
     this.use = _config.database.mysql.host;
@@ -13,6 +11,7 @@ class Database {
       _config.database.mysql.pass, {
         host: _config.database.mysql.host,
         dialect: 'mysql',
+        operatorsAliases: false,
         logging: false,
         define: {
           timestamps: true,
@@ -75,11 +74,7 @@ class Database {
   getAllUsers(gid) {
     return new Promise((resolve) => {
       resolve(this.models.User.model.findAll({
-        where: {
-          gid: {
-            [Op.eq]: gid,
-          },
-        },
+        where: { gid },
       }));
     });
   }
