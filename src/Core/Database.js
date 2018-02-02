@@ -1,5 +1,8 @@
 const chalk = require('chalk');
 const Sequelize = require('sequelize');
+const models = require('./Models');
+
+const { Op } = Sequelize;
 
 class Database {
   constructor() {
@@ -12,7 +15,7 @@ class Database {
         dialect: 'mysql',
         logging: false,
         define: {
-          timestamps: false,
+          timestamps: true,
         },
       },
     );
@@ -30,14 +33,22 @@ class Database {
       } else {
         console.log(chalk.yellow('Not connecting to the database (Database informations missing in config)'));
       }
+      return (1);
     } catch (err) {
       console.error(chalk.red(`Failed to connect to the database, retrying in 5 seconds..\n${err}`));
       await this.constructor.sleep(5000);
-      return this.authenticate();
+      return (this.authenticate());
     }
   }
 
-  getUser(user, gid) {
+  initUserStats(uid) {
+    return new Promise(async (resolve) => {
+      const stats = await this.models.Stats.model.create({ uid });
+      resolve(stats);
+    });
+  }
+
+  async getUser(user, gid) {
     return new Promise((resolve) => {
       this.models.User.model.findOrCreate({
         where: {
@@ -45,19 +56,19 @@ class Database {
           uid: user.id,
         },
         defaults: {
-          gid,
-          uid: user.id,
           username: user.username,
-          level: '0',
-          exp: '0',
-          rank: '999',
-          points: '0',
-          background: '',
-          punisher: '0',
         },
-      }).spread((u) => {
+      }).spread(async (u, created) => {
+        if (created) await this.initUserStats(user.id);
         resolve(u.dataValues);
       });
+    });
+  }
+
+  async getUserStats(uid) {
+    return new Promise(async (resolve) => {
+      const userStats = await this.models.Stats.model.findOne({ where: { uid } });
+      resolve(userStats.dataValues);
     });
   }
 
@@ -65,31 +76,29 @@ class Database {
     return new Promise((resolve) => {
       resolve(this.models.User.model.findAll({
         where: {
-          gid,
+          gid: {
+            [Op.eq]: gid,
+          },
         },
       }));
     });
   }
 
-  updateRank(id, rank) {
-    this.models.User.model.update({
-      rank,
-    }, {
-      where: {
-        id,
-      },
-    }).then((row) => {
+  updateRank(uid, rank) {
+    this.models.Stats.model.update(
+      { rank },
+      { where: { uid } },
+    ).then((row) => {
       if (row[0] < 1) throw new Error(`${row[0]} rows were affected`);
     });
   }
 
   async loadModels() {
-    const models = require('./Models');
     this.models = {};
-    for (const key in models) {
-      this.models[key] = new models[key](this.sequelize);
-      await this.models[key].model.sync();
-    }
+    Object.keys(models).forEach((model) => {
+      this.models[model] = new models[model](this.sequelize);
+      this.models[model].model.sync();
+    });
   }
 
   static sleep(time) {

@@ -84,7 +84,7 @@ class Stats {
     this.channels.forEach((channel) => {
       this.client.database.getAllUsers(channel.guild.id).then(async (users) => {
         await users.sort(this.constructor.sortLadder);
-        await users.map((u, i) => this.client.database.updateRank(u.id, i + 1));
+        await users.map((u, i) => this.client.database.updateRank(u.uid, i + 1));
         const next = new Date();
         next.setMinutes(next.getMinutes() + 30);
         let ladderContent = '```xl\n';
