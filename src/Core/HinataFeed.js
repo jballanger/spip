@@ -1,5 +1,5 @@
 const chalk = require('chalk');
-const request = require('request');
+const fetch = require('node-fetch');
 const EventEmitter = require('eventemitter3');
 
 class HinataFeed extends EventEmitter {
@@ -29,13 +29,12 @@ class HinataFeed extends EventEmitter {
 
   getFeed() {
     return new Promise((resolve, reject) => {
-      request({ url: this.source, json: true }, (err, res, body) => {
-        if (err) reject(err);
-        if (res && res.statusCode === 200) {
-          if (res.statusCode === 200) resolve(body);
-          else reject(new Error(`${res.body}\n${res.statusCode}`));
-        } else reject(new Error('res is undefined'));
-      });
+      fetch(this.source)
+        .then((res) => {
+          if (!res.ok) reject(res.statusText);
+          res.json().then(body => resolve(body));
+        })
+        .catch(err => reject(err));
     });
   }
 

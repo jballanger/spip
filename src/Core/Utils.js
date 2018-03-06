@@ -1,5 +1,4 @@
-const request = require('request');
-const requestImage = require('request').defaults({ encoding: null });
+const fetch = require('node-fetch');
 const Canvas = require('canvas');
 
 const { Image } = Canvas;
@@ -9,25 +8,18 @@ exports.randomColor = () => Math.floor(Math.random() * (0xFFFFFF + 1));
 exports.randomNumber = (min, max) => Math.floor(Math.random() * ((max - min) + min));
 
 exports.loadImageUrl = (...urls) => new Promise((resolve, reject) => {
-  const images = [];
-  let completed = 0;
-  let i;
-  for (i = 0; i < urls.length; i += 1) {
+  const images = urls.map(async (url) => {
     const img = new Image();
-    images.push(img);
-    requestImage.get(urls[i], (err, res, data) => {
-      if (err) reject(err);
-      img.onload = () => {
-        completed += 1;
-        if (completed === urls.length) resolve(images);
-      };
-      img.src = Buffer.alloc(data.length, data, 'base64');
-    });
-  }
+    const res = await fetch(url).catch(err => reject(err));
+    const buffer = await res.buffer();
+    img.src = Buffer.alloc(buffer.length, buffer, 'base64');
+    return img;
+  });
+  Promise.all(images).then(bufferedImages => resolve(bufferedImages));
 });
 
 exports.uploadImage = (url, uid) => new Promise((resolve, reject) => {
-  request.post(
+  fetch.post(
     _config.image_hosting.url,
     {
       form: {
