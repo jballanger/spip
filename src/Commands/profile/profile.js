@@ -1,6 +1,7 @@
+const path = require('path');
 const Canvas = require('canvas');
 
-Canvas.registerFont('src/Misc/OpenSans-Regular.ttf', { family: 'Open Sans' });
+Canvas.registerFont(path.resolve(__dirname, '../../Misc/OpenSans-Regular.ttf'), { family: 'Open Sans' });
 
 exports.run = async (bot, msg) => {
   if (!bot.database.use) throw new Error('This command is actually unavailable');
