@@ -1,12 +1,12 @@
 exports.run = async (bot, msg) => {
   const user = msg.mentions[0];
   if (!user) {
-    throw new Error('Please mention the user you want the messages restored.');
+    return msg.reply('Please mention the user you want the messages restored.');
   }
 
   const messages = bot.deleted.filter(m => m.author.id === user.id);
   if (!messages || messages.length < 1) {
-    throw new Error('No deleted messages were found for that user.');
+    return msg.reply('No deleted messages were found for that user.');
   }
 
   const content = messages.map((m) => {

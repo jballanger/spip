@@ -4,7 +4,7 @@ const { registerFont, createCanvas } = require('canvas');
 registerFont(path.resolve(__dirname, '../../Misc/OpenSans-Regular.ttf'), { family: 'Open Sans' });
 
 exports.run = async (bot, msg) => {
-  if (!bot.database.use) throw new Error('This command is actually unavailable');
+  if (!bot.database.use) return msg.reply('This command is actually unavailable');
   const profileUser = msg.mentions.users.size > 0 ? msg.mentions.users.first() : msg.author;
   const user = await bot.database.getUser(profileUser, msg.channel.guild.id);
   const userStat = await bot.database.getUserStats(user.uid);

@@ -5,7 +5,7 @@ dateFormat('dddd, mmmm dS, yyyy, HH:MM:ss');
 exports.run = async (bot, msg, args) => {
   const id = msg.mentions.users.size > 0 ? msg.mentions.users.firstKey() : args[0];
   const member = id ? msg.channel.guild.members.find('id', id) : null;
-  if (!member) throw new Error('That user could not be found.');
+  if (!member) return msg.reply('That user could not be found.');
   const userStats = await bot.database.getUserStats(member.user.id);
   const embed = new bot.discord.RichEmbed()
     .setTitle(member.user.tag)

@@ -1,13 +1,10 @@
 exports.run = async (bot, msg, args) => {
-  const throwToUser = (message) => {
-    throw new Error(message);
-  };
   const price = _config.discord.shop.background;
   let user = null;
   await bot.database.getUser(msg.author, msg.channel.guild.id).then((u) => { user = u; });
-  if (user.points < price) throwToUser(`${price} points are needed to change profile background.`);
+  if (user.points < price) return msg.reply(`${price} points are needed to change profile background.`);
   const url = args[0];
-  if (!url.endsWith('.png') && !url.endsWith('.jpg')) throwToUser('Please provide a png or jpg image');
+  if (!url.endsWith('.png') && !url.endsWith('.jpg')) return msg.reply('Please provide a png or jpg image');
   let hostedUrl;
   await bot.utils.uploadImage(url, msg.author.id).then((res) => { hostedUrl = res; });
   if (!hostedUrl.startsWith('http://')) throw new Error(hostedUrl);

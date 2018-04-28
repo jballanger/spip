@@ -1,8 +1,8 @@
 exports.run = (bot, msg, args) => {
-  if (msg.mentions.users.size < 1) throw new Error('No user given.');
+  if (msg.mentions.users.size < 1) return msg.reply('No user given.');
   const user = msg.mentions.users.first();
   const level = parseInt(args[1], 10);
-  if (!level) throw new Error('Invalid level');
+  if (!level) return msg.reply('Invalid level');
   bot.database.models.User.model.update({
     level,
   }, {

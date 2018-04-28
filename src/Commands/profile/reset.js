@@ -1,5 +1,5 @@
 exports.run = (bot, msg) => {
-  if (msg.mentions.users.size < 1) throw new Error('Invalid user');
+  if (msg.mentions.users.size < 1) return msg.reply('Invalid user');
   const user = msg.mentions.users.first();
   bot.database.models.User.model.destroy({
     where: {

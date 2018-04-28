@@ -1,6 +1,6 @@
 exports.run = (bot, msg, args) => {
   let url = args[0];
-  if (!url) throw new Error('Invalid url.');
+  if (!url) return msg.reply('Invalid url.');
   url = args.join(' ').replace('<', '').replace('>', '');
   const { voiceChannel } = msg.member;
   if (!voiceChannel || voiceChannel.type !== 'voice') return msg.reply('You are not in a voice channel.');
