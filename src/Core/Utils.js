@@ -41,9 +41,9 @@ exports.parser = args => new Promise(async (resolve) => {
   while (tmpArgs[0].startsWith('-')) {
     options.push(tmpArgs[0]);
     tmpArgs = tmpArgs.slice(1);
-    if (!tmpArgs[0].startsWith('-')) resolve({ options, tmpArgs });
+    if (!tmpArgs[0].startsWith('-')) resolve({ options, args: tmpArgs });
   }
-  if (!tmpArgs[0].startsWith('-')) resolve({ options, tmpArgs });
+  if (!tmpArgs[0].startsWith('-')) resolve({ options, args: tmpArgs });
 });
 
 exports.validYoutubeUrl = (url) => {
