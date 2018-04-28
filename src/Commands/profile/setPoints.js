@@ -20,5 +20,5 @@ exports.info = {
   name: 'setpoints',
   description: 'Change the number of points a user have',
   usage: 'setpoints <@user> <points>',
-  level: ['Admin'],
+  level: ['Admin', 'Staff'],
 };

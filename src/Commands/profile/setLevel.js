@@ -20,5 +20,5 @@ exports.info = {
   name: 'setlevel',
   description: 'Change the level of a user',
   usage: 'setlevel <@user> <level>',
-  level: ['Admin'],
+  level: ['Admin', 'Staff'],
 };

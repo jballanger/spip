@@ -27,4 +27,5 @@ exports.info = {
   description: `Changes your profile background for ${_config.discord.shop.background} points`,
   usage: 'setbackground <imageURL>',
   level: [],
+  disabled: true,
 };
