@@ -1,19 +1,18 @@
 exports.run = async (bot, msg) => {
-  const user = msg.mentions[0];
+  const user = msg.mentions.users.first();
   if (!user) {
     return msg.reply('Please mention the user you want the messages restored.');
   }
-
   const messages = bot.deleted.filter(m => m.author.id === user.id);
-  if (!messages || messages.length < 1) {
+  if (!messages || messages.size < 1) {
     return msg.reply('No deleted messages were found for that user.');
   }
-
-  const content = messages.map((m) => {
+  let deletedMessages = `Deleted messages from <@${user.id}>:\n`;
+  messages.forEach((m) => {
     bot.deleted.delete(m.id);
-    return `• ${m.content}\n`;
-  }).join('');
-  await msg.channel.createMessage({ content });
+    deletedMessages += `**•** __*[${m.createdAt}]*__ ${m.content}\n`;
+  });
+  await msg.channel.send(deletedMessages);
 };
 
 exports.info = {
