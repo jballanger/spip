@@ -27,24 +27,25 @@ class CommandManager {
 
   async listCommands() {
     await this.commands.sort(this.constructor.sortCommands);
-    this.channels.forEach(async (channel) => {
-      let content = '';
-      let currentLevel = null;
-      await this.commands.forEach((command) => {
-        if (!currentLevel || (currentLevel !== command.info.level.join(', ') && currentLevel !== 'General')) {
-          if (command.info.level.length < 1) currentLevel = 'General';
-          else currentLevel = command.info.level.join(', ');
-          content += `\n**[${currentLevel}]** commands\n`;
-        }
-        content += `__${command.info.name}__ - ${command.info.description}\n`;
-      });
-      channel.fetchMessages({ limit: 1 }).then((messages) => {
-        const message = messages.first();
-        if (message && message.author.id === this.bot.user.id) {
-          message.edit(content);
-        } else channel.send(content);
-      });
-    });
+    let commandList = '';
+    let currentLevel;
+    for (const command of this.commands) {
+      const commandLevel = command.info.level.join(', ') || 'General';
+      if (currentLevel !== commandLevel) {
+        currentLevel = commandLevel;
+        commandList += `\n**[${currentLevel}]**\n`;
+      }
+      commandList += `__${command.info.name}__ - ${command.info.description}\n`;
+    }
+    for (const channel of this.channels) {
+      const message = (await channel.fetchMessages({ limit : 1 })).first();
+      if (message && message.author.id === this.bot.user.id) {
+        message.edit(commandList);
+        if (!message.pinned) message.pin();
+      } else {
+        channel.send(commandList).then(message => message.pin());
+      }
+    }
   }
 
   loadCommands() {
