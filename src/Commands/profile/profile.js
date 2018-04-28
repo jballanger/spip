@@ -1,14 +1,14 @@
 const path = require('path');
-const Canvas = require('canvas');
+const { registerFont, createCanvas } = require('canvas');
 
-Canvas.registerFont(path.resolve(__dirname, '../../Misc/OpenSans-Regular.ttf'), { family: 'Open Sans' });
+registerFont(path.resolve(__dirname, '../../Misc/OpenSans-Regular.ttf'), { family: 'Open Sans' });
 
 exports.run = async (bot, msg) => {
   if (!bot.database.use) throw new Error('This command is actually unavailable');
   const profileUser = msg.mentions.users.size > 0 ? msg.mentions.users.first() : msg.author;
-  let user = null;
-  await bot.database.getUser(profileUser, msg.channel.guild.id).then((u) => { user = u; });
-  user.exp = bot.stats.getExpPercent(user.level, user.exp);
+  const user = await bot.database.getUser(profileUser, msg.channel.guild.id);
+  const userStat = await bot.database.getUserStats(user.uid);
+  userStat.expPercent = bot.stats.getExpPercent(userStat.level, userStat.exp);
   const backgrounds = [
     'http://img04.deviantart.net/793d/i/2016/009/e/1/background_anime_1_by_al00ndr44-d9nd73s.png',
     'http://img12.deviantart.net/75f8/i/2016/234/9/0/anime_background_by_nieris-daeuy2n.png',
@@ -29,8 +29,8 @@ exports.run = async (bot, msg) => {
   const backgroundUrl = user.background ||
     backgrounds[bot.utils.randomNumber(0, backgrounds.length)];
   const badgeUrl = badges[bot.utils.randomNumber(0, badges.length)];
-  bot.utils.loadImageUrl(backgroundUrl, badgeUrl, profileUser.avatarURL).then(async (images) => {
-    const profile = new Canvas(360, 120);
+  bot.utils.loadImageUrl(backgroundUrl, badgeUrl, profileUser.avatarURL || profileUser.defaultAvatarURL).then(async (images) => {
+    const profile = new createCanvas(360, 120);
     const ctx = profile.getContext('2d');
     ctx.drawImage(images[0], 0, 0, 360, 120);
     ctx.globalAlpha = 0.9;
@@ -44,7 +44,7 @@ exports.run = async (bot, msg) => {
     ctx.fillStyle = 'white';
     ctx.fillRect(100, 40, 206, 10);
     ctx.fillStyle = 'grey';
-    ctx.fillRect(102, 42, (parseInt(user.exp, 10) / 100) * 202, 6);
+    ctx.fillRect(102, 42, (parseInt(userStat.exp, 10) / 100) * 202, 6);
     ctx.beginPath();
     ctx.moveTo(160, 55);
     ctx.lineTo(160, 105);
@@ -55,14 +55,14 @@ exports.run = async (bot, msg) => {
     ctx.font = '20px "Open Sans"';
     ctx.fillText('LEVEL', 100, 70);
     ctx.font = '30px "Open Sans"';
-    ctx.fillText(user.level, (130 - (user.level.toString().length * 10), 100));
+    ctx.fillText(userStat.level, (130 - (userStat.level.toString().length * 10)), 100);
     ctx.font = '15px "Open Sans"';
     ctx.fillText('Server Rank', 170, 75);
     ctx.fillText('Points', 170, 95);
-    ctx.fillText(`#${user.rank}`, 270, 75);
-    ctx.fillText(user.points, 270, 95);
+    ctx.fillText(`#${userStat.rank}`, 270, 75);
+    ctx.fillText(userStat.points, 270, 95);
     ctx.font = '10px "Open Sans"';
-    ctx.fillText(`${user.exp}%`, 310, 48);
+    ctx.fillText(`${userStat.exp}%`, 310, 48);
     ctx.globalAlpha = 1;
     ctx.drawImage(images[1], 310, 10, 24, 24);
     ctx.drawImage(images[2], 22, 28, 64, 64);
