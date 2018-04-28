@@ -9,7 +9,7 @@ exports.randomNumber = (min, max) => Math.floor(Math.random() * ((max - min) + m
 
 exports.loadImageUrl = (...urls) => new Promise((resolve, reject) => {
   const images = urls.map(async (url) => {
-    if (!url) return;
+    if (!url) return null;
     const img = new Image();
     const res = await fetch(url).catch(err => reject(err));
     const buffer = await res.buffer();

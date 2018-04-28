@@ -29,23 +29,20 @@ class CommandManager {
     await this.commands.sort(this.constructor.sortCommands);
     let commandList = '';
     let currentLevel;
-    for (const command of this.commands) {
+    this.commands.forEach((command) => {
       const commandLevel = command.info.level.join(', ') || 'General';
       if (currentLevel !== commandLevel) {
         currentLevel = commandLevel;
         commandList += `\n**[${currentLevel}]**\n`;
       }
       commandList += `__${command.info.name}__ - ${command.info.description}\n`;
-    }
-    for (const channel of this.channels) {
-      const message = (await channel.fetchMessages({ limit : 1 })).first();
-      if (message && message.author.id === this.bot.user.id) {
-        message.edit(commandList);
-        if (!message.pinned) message.pin();
-      } else {
-        channel.send(commandList).then(message => message.pin());
-      }
-    }
+    });
+    this.channels.forEach(async (channel) => {
+      const spipMessage = (await channel.fetchMessages())
+        .find(m => (m.author.id === this.bot.user.id && !m.system));
+      if (!spipMessage) channel.send(commandList).then(m => m.pin());
+      else spipMessage.edit(commandList).then(m => m.pin());
+    });
   }
 
   loadCommands() {
