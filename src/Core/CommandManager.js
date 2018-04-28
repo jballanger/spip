@@ -41,7 +41,7 @@ class CommandManager {
       const spipMessage = (await channel.fetchMessages())
         .find(m => (m.author.id === this.bot.user.id && !m.system));
       if (!spipMessage) channel.send(commandList).then(m => m.pin());
-      else spipMessage.edit(commandList).then(m => m.pin());
+      else spipMessage.edit(commandList).then(m => !m.pinned && m.pin());
     });
   }
 
