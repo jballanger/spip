@@ -78,6 +78,9 @@ class CommandManager {
     if (typeof object.info.level !== 'object') {
       return 'object info is missing a valid level field';
     }
+    if (object.info.disabled) {
+      return 'disabled';
+    }
     return null;
   }
 
@@ -85,7 +88,7 @@ class CommandManager {
     const error = this.constructor.validate(command);
 
     if (error) {
-      return console.error(chalk.yellow(`Failed to load ${name}\n${error}`));
+      return console.error(chalk.yellow(`Failed to load ${name}: ${error}`));
     }
     return (this.commands.push(command));
   }
