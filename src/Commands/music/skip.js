@@ -9,5 +9,5 @@ exports.info = {
   name: 'skip',
   description: 'Skip the current song',
   usage: 'skip',
-  level: ['Admin', 'Staff'],
+  level: [],
 };
