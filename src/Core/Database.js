@@ -79,6 +79,14 @@ class Database {
     });
   }
 
+  getAllUsersStat(uids) {
+    return new Promise((resolve) => {
+      resolve(this.models.Stats.model.findAll({
+        where: { uid: uids },
+      }));
+    });
+  }
+
   updateRank(uid, rank) {
     this.models.Stats.model.update(
       { rank },

@@ -1,5 +1,5 @@
 exports.run = (bot, msg, args) => {
-  if (!args[0]) throw new Error('No user given.');
+  if (!args[0]) return msg.reply('No user given.');
   const p1 = bot.chinmei.getMalUser(args[0], 1);
   const p2 = bot.chinmei.getMalUser(args[0], 2);
   return Promise.all([p1, p2]).then(async (malUser) => {
@@ -23,7 +23,7 @@ exports.run = (bot, msg, args) => {
       .addField('Plan to read', u2.user_plantoread, true);
     await msg.channel.send({ embed });
   }).catch(() => {
-    throw new Error('User not found.');
+    return msg.reply('User not found.');
   });
 };
 

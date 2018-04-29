@@ -1,12 +1,12 @@
 exports.run = (bot, msg, args) => {
   let url = args[0];
-  if (!url) throw new Error('Invalid url.');
+  if (!url) return msg.reply('Invalid url.');
   url = args.join(' ').replace('<', '').replace('>', '');
   const { voiceChannel } = msg.member;
-  if (!voiceChannel || voiceChannel.type !== 'voice') throw new Error('You are not in a voice channel.');
+  if (!voiceChannel || voiceChannel.type !== 'voice') return msg.reply('You are not in a voice channel.');
   const permissions = voiceChannel.permissionsFor(bot.user);
-  if (!permissions.has('CONNECT')) throw new Error('I don\'t have permissions to join your voice channel.');
-  if (!permissions.has('SPEAK')) throw new Error('I don\'t have permissions to speak in your voice channel.');
+  if (!permissions.has('CONNECT')) return msg.reply('I don\'t have permissions to join your voice channel.');
+  if (!permissions.has('SPEAK')) return msg.reply('I don\'t have permissions to speak in your voice channel.');
   voiceChannel.join().then((connection) => {
     const data = {
       url,

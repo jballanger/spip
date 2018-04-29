@@ -9,6 +9,7 @@ exports.randomNumber = (min, max) => Math.floor(Math.random() * ((max - min) + m
 
 exports.loadImageUrl = (...urls) => new Promise((resolve, reject) => {
   const images = urls.map(async (url) => {
+    if (!url) return null;
     const img = new Image();
     const res = await fetch(url).catch(err => reject(err));
     const buffer = await res.buffer();
@@ -40,9 +41,9 @@ exports.parser = args => new Promise(async (resolve) => {
   while (tmpArgs[0].startsWith('-')) {
     options.push(tmpArgs[0]);
     tmpArgs = tmpArgs.slice(1);
-    if (!tmpArgs[0].startsWith('-')) resolve({ options, tmpArgs });
+    if (!tmpArgs[0].startsWith('-')) resolve({ options, args: tmpArgs });
   }
-  if (!tmpArgs[0].startsWith('-')) resolve({ options, tmpArgs });
+  if (!tmpArgs[0].startsWith('-')) resolve({ options, args: tmpArgs });
 });
 
 exports.validYoutubeUrl = (url) => {
@@ -52,7 +53,7 @@ exports.validYoutubeUrl = (url) => {
 };
 
 exports.getHours = (date) => {
-  let h = date.getHours() + 2;
+  let h = date.getHours();
   if (h > 23) h -= 24;
   return (h < 10 ? `0${h}` : h);
 };

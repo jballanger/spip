@@ -9,6 +9,7 @@ class MusicManager {
     this.voiceChannels = new this.client.discord.Collection();
     this.dispatcher = new this.client.discord.Collection();
     this.volume = new this.client.discord.Collection();
+    this.leaveTimeout = new this.client.discord.Collection();
   }
 
   addSong(data) {
@@ -21,7 +22,7 @@ class MusicManager {
     const queueSong = guildQueue.first();
     if (!queueSong) {
       guildQueue.set(1, data);
-      this.checkQueue(guildQueue);
+      this.checkQueue(guildQueue, data.guildId);
     } else {
       const { size } = guildQueue;
       guildQueue.set(size + 1, data);
@@ -29,8 +30,16 @@ class MusicManager {
     }
   }
 
-  checkQueue(queue) {
-    if (queue.size < 1) return this.client.setTimeout(this.constructor.leaveChannels, 15000, this);
+  checkQueue(queue, gid) {
+    if (queue.size < 1) {
+      this.leaveTimeout.set(
+        gid,
+        this.client.setTimeout(this.constructor.leaveChannels, 15000, this),
+      );
+      return;
+    }
+    const timeout = this.leaveTimeout.get(gid);
+    if (timeout) this.client.clearTimeout(timeout);
     const data = queue.first();
     this.youtube.getVideo(data.url).then((video) => {
       this.play(video, data, queue);
@@ -40,14 +49,13 @@ class MusicManager {
           this.play(video, data, queue);
         }).catch(() => {
           data.msg.reply(`Couldn't obtain the search result video's details for *${data.url}*.`);
-          this.rearrange(queue);
+          this.rearrange(queue, gid);
         });
       }).catch(() => {
         data.msg.reply(`There were no search results for *${data.url}*.`);
-        this.rearrange(queue);
+        this.rearrange(queue, gid);
       });
     });
-    return (true);
   }
 
   play(video, data, queue) {
@@ -58,30 +66,30 @@ class MusicManager {
         streamError = true;
         console.error(`Error occured while streaming video: ${err}`);
         playing.edit(`Coulnd't play ${video.title}, unlucky :^)`);
-        this.rearrange(queue);
+        this.rearrange(queue, data.guildId);
       });
     const dispatcher = data.connection.playStream(stream, { passes: 1 })
       .on('end', () => {
         if (streamError) return;
-        this.rearrange(queue);
+        this.rearrange(queue, data.guildId);
       })
       .on('error', (err) => {
         console.error(`Error occured in dispatcher: ${err}`);
         data.textChannel.send(`An error occured while playing ${video.title}, try again :^)`);
-        this.rearrange(queue);
+        this.rearrange(queue, data.guildId);
       });
     dispatcher.setVolumeLogarithmic(this.volume.get(data.guildId) / 5);
     this.voiceChannels.set(data.guildId, data.connection.channel);
     this.dispatcher.set(data.guildId, dispatcher);
   }
 
-  async rearrange(queue) {
+  async rearrange(queue, gid) {
     await queue.forEach((e, k, map) => {
       const elem = map.get(k + 1);
       if (elem) map.set(k, elem);
       else map.delete(k);
     });
-    this.checkQueue(queue);
+    this.checkQueue(queue, gid);
   }
 
   static leaveChannels(client) {

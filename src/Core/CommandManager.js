@@ -27,23 +27,21 @@ class CommandManager {
 
   async listCommands() {
     await this.commands.sort(this.constructor.sortCommands);
+    let commandList = '';
+    let currentLevel;
+    this.commands.forEach((command) => {
+      const commandLevel = command.info.level.join(', ') || 'General';
+      if (currentLevel !== commandLevel) {
+        currentLevel = commandLevel;
+        commandList += `\n**[${currentLevel}]**\n`;
+      }
+      commandList += `__${command.info.name}__ - ${command.info.description}\n`;
+    });
     this.channels.forEach(async (channel) => {
-      let content = '';
-      let currentLevel = null;
-      await this.commands.forEach((command) => {
-        if (!currentLevel || (currentLevel !== command.info.level.join(', ') && currentLevel !== 'General')) {
-          if (command.info.level.length < 1) currentLevel = 'General';
-          else currentLevel = command.info.level.join(', ');
-          content += `\n**[${currentLevel}]** commands\n`;
-        }
-        content += `__${command.info.name}__ - ${command.info.description}\n`;
-      });
-      channel.fetchMessages({ limit: 1 }).then((messages) => {
-        const message = messages.first();
-        if (message && message.author.id === this.bot.user.id) {
-          message.edit(content);
-        } else channel.send(content);
-      });
+      const pinnedMessages = await channel.fetchPinnedMessages();
+      const spipMessage = pinnedMessages.find(m => (m.author.id === this.bot.user.id && !m.system));
+      if (!spipMessage) channel.send(commandList).then(m => m.pin());
+      else spipMessage.edit(commandList).then(m => !m.pinned && m.pin());
     });
   }
 
@@ -80,6 +78,9 @@ class CommandManager {
     if (typeof object.info.level !== 'object') {
       return 'object info is missing a valid level field';
     }
+    if (object.info.disabled) {
+      return 'disabled';
+    }
     return null;
   }
 
@@ -87,7 +88,7 @@ class CommandManager {
     const error = this.constructor.validate(command);
 
     if (error) {
-      return console.error(chalk.yellow(`Failed to load ${name}\n${error}`));
+      return console.error(chalk.yellow(`Failed to load ${name}: ${error}`));
     }
     return (this.commands.push(command));
   }
