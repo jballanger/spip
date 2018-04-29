@@ -60,10 +60,9 @@ class DiscordClient extends DiscordJs.Client {
   }
 
   refreshBotChannels() {
-    this.hfeed.channels = this.channels.findAll('name', 'chan_de_bot');
+    this.hfeed.channels = this.channels.findAll('name', _config.hinata_feed.channel);
     this.stats.channels = this.channels.findAll('name', 'ladder');
     this.commands.channels = this.channels.findAll('name', 'spip');
-    console.log(chalk.blue('Bot channels refreshed !'));
   }
 }
 
