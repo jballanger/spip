@@ -53,7 +53,7 @@ exports.validYoutubeUrl = (url) => {
 };
 
 exports.getHours = (date) => {
-  let h = date.getHours() + 2;
+  let h = date.getHours();
   if (h > 23) h -= 24;
   return (h < 10 ? `0${h}` : h);
 };
