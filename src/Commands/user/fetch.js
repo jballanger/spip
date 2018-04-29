@@ -6,7 +6,7 @@ exports.run = async (bot, msg, args) => {
   const id = msg.mentions.users.size > 0 ? msg.mentions.users.firstKey() : args[0];
   const member = id ? msg.channel.guild.members.find('id', id) : null;
   if (!member) return msg.reply('That user could not be found.');
-  await this.client.database.getUser(member.user, msg.channel.guild.id);
+  await bot.database.getUser(member.user, msg.channel.guild.id);
   const userStats = await bot.database.getUserStats(member.user.id);
   const embed = new bot.discord.RichEmbed()
     .setTitle(member.user.tag)
