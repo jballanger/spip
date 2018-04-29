@@ -78,7 +78,7 @@ class Stats {
     }
     this.channels.forEach(async (channel) => {
       const channelUsers = await this.client.database.getAllUsers(channel.guild.id);
-      const channelUsersUid = channelUsers.map(u => u = u.uid);
+      const channelUsersUid = channelUsers.map(u => u.uid);
       const usersStat = await this.client.database.getAllUsersStat(channelUsersUid);
       usersStat.sort(this.constructor.sortLadder);
       usersStat.map((u, i) => this.client.database.updateRank(u.uid, i + 1));

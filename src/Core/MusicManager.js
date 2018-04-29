@@ -9,7 +9,7 @@ class MusicManager {
     this.voiceChannels = new this.client.discord.Collection();
     this.dispatcher = new this.client.discord.Collection();
     this.volume = new this.client.discord.Collection();
-    this.leaveTimeout = new this.client.discord.Collection();;
+    this.leaveTimeout = new this.client.discord.Collection();
   }
 
   addSong(data) {
@@ -32,12 +32,14 @@ class MusicManager {
 
   checkQueue(queue, gid) {
     if (queue.size < 1) {
-      this.leaveTimeout.set(gid, this.client.setTimeout(this.constructor.leaveChannels, 15000, this));
+      this.leaveTimeout.set(
+        gid,
+        this.client.setTimeout(this.constructor.leaveChannels, 15000, this),
+      );
       return;
-    } else {
-      const timeout = this.leaveTimeout.get(gid);
-      if (timeout) this.client.clearTimeout(timeout);
     }
+    const timeout = this.leaveTimeout.get(gid);
+    if (timeout) this.client.clearTimeout(timeout);
     const data = queue.first();
     this.youtube.getVideo(data.url).then((video) => {
       this.play(video, data, queue);
@@ -54,7 +56,6 @@ class MusicManager {
         this.rearrange(queue, gid);
       });
     });
-    return (true);
   }
 
   play(video, data, queue) {
