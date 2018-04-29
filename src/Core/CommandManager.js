@@ -38,8 +38,8 @@ class CommandManager {
       commandList += `__${command.info.name}__ - ${command.info.description}\n`;
     });
     this.channels.forEach(async (channel) => {
-      const spipMessage = (await channel.fetchMessages())
-        .find(m => (m.author.id === this.bot.user.id && !m.system));
+      const pinnedMessages = await channel.fetchPinnedMessages();
+      const spipMessage = pinnedMessages.find(m => (m.author.id === this.bot.user.id && !m.system));
       if (!spipMessage) channel.send(commandList).then(m => m.pin());
       else spipMessage.edit(commandList).then(m => !m.pinned && m.pin());
     });
