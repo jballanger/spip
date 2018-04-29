@@ -22,6 +22,7 @@ class Stats {
   async updateStats(msg) {
     if (this.users[`${msg.channel.guild.id}${msg.author.id}`]) return;
     if (msg.content.length < 3) return;
+    await this.client.database.getUser(msg.author, msg.channel.guild.id);
     const user = await this.client.database.getUserStats(msg.author.id);
     let exp = parseInt(user.exp, 10);
     let points = parseInt(user.points, 10);

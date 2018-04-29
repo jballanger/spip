@@ -3,6 +3,7 @@ exports.run = async (bot, msg, args) => {
   const user = msg.mentions.users.first();
   const points = parseInt(args[1], 10);
   if (!points) return msg.reply('Invalid number of points');
+  await bot.database.getUser(user, msg.channel.guild.id);
   const userStat = await bot.database.getUserStats(user.id);
   const newPoints = points + userStat.points;
   bot.database.models.Stats.model.update({
