@@ -1,0 +1,31 @@
+{
+    "discord": {
+        "token": "",
+        "prefix": "",
+        "game": "",
+        "shop": {
+            "background": ""
+        }
+    },
+    "database": {
+        "mysql": {
+            "host": "",
+            "database": "",
+            "user": "",
+            "pass": ""
+        }
+    },
+    "myanimelist": {
+        "username": "",
+        "password": ""
+    },
+    "hinata_feed": {
+        "channel": ""
+    },
+    "youtube": {
+        "apikey": ""
+    },
+    "educator": {
+        "wlist": ""
+    }
+}

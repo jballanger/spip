@@ -3,7 +3,7 @@ process.on('unhandledRejection', (reason, p) => {
 });
 
 global.Promise = require('bluebird');
-global._config = require('./config.json');
+global._config = require('../config.json');
 const chalk = require('chalk');
 const DiscordClient = require('./Core/DiscordClient.js');
 
