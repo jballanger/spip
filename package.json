@@ -23,7 +23,7 @@
     "bluebird": "^3.5.1",
     "canvas": "^2.0.0-alpha.12",
     "chalk": "^2.4.1",
-    "chinmei": "^1.2.1",
+    "chinmei": "^1.2.2",
     "dateformat": "^3.0.3",
     "discord.js": "^11.3.2",
     "erlpack": "github:discordapp/erlpack",
