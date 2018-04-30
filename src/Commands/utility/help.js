@@ -1,6 +1,6 @@
 exports.run = async (bot, msg, args) => {
-  const command = bot.commands.get(args[0]);
-  if (!command) return msg.reply('Command not found.');
+  const command = bot.commands.get(args[0] || 'help');
+  if (!command) return msg.reply(`No command \`${args[0]}\` were found.`);
   const embed = new bot.discord.RichEmbed()
     .setTitle(`Help for ${command.info.name}`)
     .setColor(7228979)
