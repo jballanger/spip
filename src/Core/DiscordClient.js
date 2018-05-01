@@ -1,5 +1,4 @@
 const core = require('./index.js');
-const chalk = require('chalk');
 const DiscordJs = require('discord.js');
 const Chinmei = require('chinmei');
 

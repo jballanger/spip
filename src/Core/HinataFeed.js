@@ -1,4 +1,3 @@
-const chalk = require('chalk');
 const fetch = require('node-fetch');
 const EventEmitter = require('eventemitter3');
 
@@ -21,7 +20,7 @@ class HinataFeed extends EventEmitter {
     await this.getFeed().then((feed) => {
       this.feed = feed;
       this.watchFeed();
-      console.log(chalk.blue('HinataFeed initiated !'));
+      console.log('HinataFeed initiated !');
     }).catch((e) => {
       throw e;
     });

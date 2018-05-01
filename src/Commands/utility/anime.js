@@ -1,4 +1,3 @@
-const chalk = require('chalk');
 const htmlToText = require('html-to-text');
 
 exports.run = async (bot, msg, args) => {
