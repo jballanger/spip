@@ -1,5 +1,3 @@
-const chalk = require('chalk');
-
 class Stats {
   constructor(client) {
     this.client = client;
@@ -75,7 +73,7 @@ class Stats {
 
   updateLadder() {
     if (!this.client.database.use) {
-      return (console.log(chalk.yellow('Not updating ladder (Database not used)')));
+      return console.log('Not updating ladder (Database not used)');
     }
     this.channels.forEach(async (channel) => {
       const channelUsers = await this.client.database.getAllUsers(channel.guild.id);
@@ -100,7 +98,7 @@ class Stats {
       if (message && message.author.id === this.client.user.id) message.edit(ladderContent);
       else channel.send(ladderContent);
     });
-    return (console.log(chalk.blue('Ladder updated for every channels !')));
+    return console.log('Ladder updated for every channels !');
   }
 
   refreshLadder() {

@@ -4,7 +4,6 @@ process.on('unhandledRejection', (reason, p) => {
 
 global.Promise = require('bluebird');
 global._config = require('../config.json');
-const chalk = require('chalk');
 const DiscordClient = require('./Core/DiscordClient.js');
 
 const bot = new DiscordClient();
@@ -13,5 +12,5 @@ bot.on('warn', console.warn);
 bot.on('error', console.error);
 bot.on('ready', async () => {
   await bot.init();
-  console.log(chalk.green(`\n${bot.user.username}#${bot.user.discriminator} ready !`));
+  console.log(`\n${bot.user.username}#${bot.user.discriminator} ready !`);
 });
