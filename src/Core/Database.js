@@ -54,9 +54,6 @@ class Database {
           gid,
           uid: user.id,
         },
-        defaults: {
-          username: user.username,
-        },
       }).spread(async (u, created) => {
         if (created) await this.initUserStats(user.id);
         resolve(u.dataValues);
