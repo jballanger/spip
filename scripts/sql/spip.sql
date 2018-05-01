@@ -25,7 +25,7 @@ DROP TABLE IF EXISTS `stats`;
 CREATE TABLE `stats` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `uid` text NOT NULL,
-  `rank` int(11) NOT NULL DEFAULT '9999999',
+  `rank` int(11) NOT NULL DEFAULT '1000',
   `level` int(11) NOT NULL DEFAULT '0',
   `exp` bigint(20) NOT NULL DEFAULT '0',
   `points` bigint(11) NOT NULL DEFAULT '0',
@@ -46,7 +46,6 @@ CREATE TABLE `users` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `gid` text NOT NULL,
   `uid` text NOT NULL,
-  `username` text NOT NULL,
   `punisher` int(11) NOT NULL DEFAULT '0',
   `createdAt` datetime NOT NULL,
   `updatedAt` datetime NOT NULL,

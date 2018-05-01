@@ -18,10 +18,6 @@ class UserModel {
         type: this.Sequelize.TEXT,
         allowNull: false,
       },
-      username: {
-        type: this.Sequelize.TEXT,
-        allowNull: false,
-      },
       punisher: {
         type: this.Sequelize.INTEGER,
         allowNull: false,
