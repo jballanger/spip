@@ -6,16 +6,12 @@ exports.run = async (bot, msg, args) => {
   await bot.database.getUser(user, msg.channel.guild.id);
   const userStat = await bot.database.getUserStats(user.id);
   const newPoints = points + userStat.points;
-  bot.database.models.Stats.model.update({
-    points: newPoints,
-  }, {
-    where: {
-      uid: user.id,
-    },
-  }).then((row) => {
-    if (row[0] < 1) throw new Error(`${row[0]} rows were affected`);
-    else msg.reply(`<@${user.id}> got ${points} points.`);
-  });
+  const row = await bot.database.models.Stats.model.update(
+    { points: newPoints },
+    { where: { uid: user.id } },
+  );
+  if (row[0] < 1) throw new Error(`${row[0]} rows were affected (${user.id})`);
+  else return msg.reply(`<@${user.id}> got ${points} points.`);
 };
 
 exports.info = {
