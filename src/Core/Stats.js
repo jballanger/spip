@@ -88,8 +88,11 @@ class Stats {
       let ladderContent = '```xl\n';
       await usersStat.forEach((stats, i) => {
         const user = channelUsers.filter(u => u.dataValues.uid === stats.uid)[0];
-        const percent = this.getExpPercent(stats.level, stats.exp);
-        ladderContent += `#${i + 1} \u27A4 ${user.dataValues.username} - Level ${stats.level} (${percent}%)\n`;
+        const guildUser = channel.members.get(user.dataValues.uid);
+        if (guildUser) {
+          const percent = this.getExpPercent(stats.level, stats.exp);
+          ladderContent += `#${i + 1} \u27A4 ${guildUser.user.username} - Level ${stats.level} (${percent}%)\n`;
+        }
       });
       ladderContent += '```\n';
       ladderContent += `Next update at ${this.client.utils.getHours(next)}:${this.client.utils.getMinutes(next)}`;

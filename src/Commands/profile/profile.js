@@ -5,8 +5,8 @@ registerFont(path.resolve(__dirname, '../../Misc/OpenSans-Regular.ttf'), { famil
 
 exports.run = async (bot, msg) => {
   if (!bot.database.use) return msg.reply('This command is actually unavailable');
-  const profileUser = msg.mentions.users.size > 0 ? msg.mentions.users.first() : msg.author;
-  const user = await bot.database.getUser(profileUser, msg.channel.guild.id);
+  const userProfile = msg.mentions.users.size > 0 ? msg.mentions.users.first() : msg.author;
+  const user = await bot.database.getUser(userProfile, msg.channel.guild.id);
   const userStat = await bot.database.getUserStats(user.uid);
   userStat.expPercent = bot.stats.getExpPercent(userStat.level, userStat.exp);
   const backgrounds = [
@@ -29,7 +29,7 @@ exports.run = async (bot, msg) => {
   const backgroundUrl = user.background ||
     backgrounds[bot.utils.randomNumber(0, backgrounds.length)];
   const badgeUrl = badges[bot.utils.randomNumber(0, badges.length)];
-  bot.utils.loadImageUrl(backgroundUrl, badgeUrl, profileUser.avatarURL || profileUser.defaultAvatarURL).then(async (images) => {
+  bot.utils.loadImageUrl(backgroundUrl, badgeUrl, userProfile.avatarURL || userProfile.defaultAvatarURL).then(async (images) => {
     const profile = new createCanvas(360, 120);
     const ctx = profile.getContext('2d');
     ctx.drawImage(images[0], 0, 0, 360, 120);
@@ -51,7 +51,7 @@ exports.run = async (bot, msg) => {
     ctx.stroke();
     ctx.fillStyle = '#6c6c6c';
     ctx.font = '20px "Open Sans"';
-    ctx.fillText(user.username, 100, 30);
+    ctx.fillText(userProfile.username, 100, 30);
     ctx.font = '20px "Open Sans"';
     ctx.fillText('LEVEL', 100, 70);
     ctx.font = '30px "Open Sans"';
@@ -70,7 +70,7 @@ exports.run = async (bot, msg) => {
     await msg.channel.send({
       file: {
         attachment: result,
-        name: `${user.username}.png`,
+        name: `${userProfile.username}.png`,
       },
     });
   }).catch((e) => {
