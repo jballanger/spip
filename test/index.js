@@ -1,7 +1,5 @@
 global.Promise = require('bluebird');
-global._config = require('../src/config.json');
-const assert = require('assert');
-const chalk = require('chalk');
+global._config = require('../config.json');
 const DiscordClient = require('../src/Core/DiscordClient.js');
 
 const bot = new DiscordClient();

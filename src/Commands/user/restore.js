@@ -12,7 +12,7 @@ exports.run = async (bot, msg) => {
     bot.deleted.delete(m.id);
     deletedMessages += `**•** __*[${m.createdAt}]*__ ${m.content}\n`;
   });
-  await msg.channel.send(deletedMessages);
+  return msg.channel.send(deletedMessages);
 };
 
 exports.info = {

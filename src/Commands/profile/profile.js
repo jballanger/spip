@@ -9,12 +9,12 @@ exports.run = async (bot, msg) => {
   const user = await bot.database.getUser(userProfile, msg.channel.guild.id);
   const userStat = await bot.database.getUserStats(user.uid);
   userStat.expPercent = bot.stats.getExpPercent(userStat.level, userStat.exp);
-  const [ background, badge, avatar ] = await Promise.all([
+  const [background, badge, avatar] = await Promise.all([
     bot.utils.loadImage(`src/Misc/profile/background${bot.utils.randomNumber(1, 5)}.png`),
     bot.utils.loadImage(`src/Misc/profile/badge${bot.utils.randomNumber(1, 8)}.png`),
     bot.utils.loadImageUrl(userProfile.avatarURL || userProfile.defaultAvatarURL),
   ]);
-  const profile = new createCanvas(360, 120);
+  const profile = createCanvas(360, 120);
   const ctx = profile.getContext('2d');
   ctx.drawImage(background, 0, 0, 360, 120);
   ctx.globalAlpha = 0.9;
@@ -51,7 +51,7 @@ exports.run = async (bot, msg) => {
   ctx.drawImage(badge, 310, 10, 24, 24);
   ctx.drawImage(avatar, 22, 28, 64, 64);
   const result = await profile.toBuffer();
-  await msg.channel.send({
+  return msg.channel.send({
     file: {
       attachment: result,
       name: `${userProfile.username}.png`,

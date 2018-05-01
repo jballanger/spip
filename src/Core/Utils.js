@@ -8,7 +8,7 @@ exports.randomColor = () => Math.floor(Math.random() * (0xFFFFFF + 1));
 
 exports.randomNumber = (min, max) => (Math.floor(Math.random() * (max - min)) + min);
 
-exports.loadImageUrl = (url) => new Promise(async (resolve, reject) => {
+exports.loadImageUrl = url => new Promise(async (resolve, reject) => {
   if (!url) return null;
   const img = new Image();
   try {
@@ -18,10 +18,10 @@ exports.loadImageUrl = (url) => new Promise(async (resolve, reject) => {
   } catch (e) {
     return reject(e);
   }
-  resolve(img);
+  return resolve(img);
 });
 
-exports.loadImage = (path) => new Promise(async (resolve, reject) => {
+exports.loadImage = path => new Promise(async (resolve, reject) => {
   if (!path) return null;
   const img = new Image();
   try {
@@ -30,7 +30,7 @@ exports.loadImage = (path) => new Promise(async (resolve, reject) => {
   } catch (e) {
     return reject(e);
   }
-  resolve(img);
+  return resolve(img);
 });
 
 exports.uploadImage = (url, uid) => new Promise((resolve, reject) => {
