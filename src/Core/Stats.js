@@ -17,6 +17,10 @@ class Stats {
     return Math.round((exp / this.constructor.formula(level + 1)) * 100);
   }
 
+  getNextLevelExp(level) {
+    return this.constructor.formula(level + 1);
+  }
+
   async updateStats(msg) {
     if (this.users[`${msg.channel.guild.id}${msg.author.id}`]) return;
     if (msg.content.length < 3) return;
