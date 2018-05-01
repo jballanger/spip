@@ -8,7 +8,7 @@ exports.run = async (bot, msg, args) => {
     { where: { uid: user.id } },
   );
   if (row[0] < 1) throw new Error(`${row[0]} rows were affected (${user.id})`);
-  else return msg.reply(`<@${user.id}> now have ${points} points.`);  
+  else return msg.reply(`<@${user.id}> now have ${points} points.`);
 };
 
 exports.info = {
