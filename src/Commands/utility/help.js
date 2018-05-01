@@ -7,7 +7,7 @@ exports.run = async (bot, msg, args) => {
     .addField('Usage', `${_config.discord.prefix}${command.info.usage}`)
     .addField('Description', command.info.description)
     .addField('Role required', command.info.level.length > 0 ? `One of ${command.info.level.map(a => `**${a}**`).join(', ')}` : 'None');
-  await msg.channel.send({ embed });
+  return msg.channel.send({ embed });
 };
 
 exports.info = {
