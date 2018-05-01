@@ -1,4 +1,4 @@
 node_modules/
 config.json
 .DS_Store
-Misc/wlist.txt
+src/Misc/educator/wlist.txt
