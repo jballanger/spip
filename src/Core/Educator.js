@@ -4,6 +4,7 @@ class Educator {
   constructor(client) {
     this.client = client;
     this.wlist = null;
+    this.guignols = new this.client.discord.Collection();
   }
 
   loadList(path) {
@@ -26,9 +27,10 @@ class Educator {
     return this.wlist.some(e => str.indexOf(e) !== -1);
   }
 
-  static removePunishment(member, role) {
+  static removePunishment(educator, member, role) {
     try {
       member.removeRole(role);
+      educator.guignols.delete(member.id);
     } catch (e) {
       if (e.code === 50013) {
         console.log(`Not enough access to remove punishment to ${member.id}`);
@@ -53,7 +55,10 @@ class Educator {
     const time = (user.punisher === 0) ? 2 : user.punisher * 2;
     try {
       await member.addRole(guignol);
-      this.client.setTimeout(this.constructor.removePunishment, (time * 60000), member, guignol.id);
+      const date = new Date();
+      date.setMinutes(date.getMinutes() + time);
+      this.client.setTimeout(this.constructor.removePunishment, (time * 60000), this, member, guignol.id);
+      this.guignols.set(member.id, date);
       const row = await this.client.database.models.User.model.update(
         { punisher: time },
         { where: { uid: member.id, gid: guild.id } },
