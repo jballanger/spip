@@ -4,7 +4,7 @@ class Educator {
   constructor(client) {
     this.client = client;
     this.wlist = null;
-    this.guignols = new this.client.discord.Collection();
+    this.guilds = new this.client.discord.Collection();
   }
 
   loadList(path) {
@@ -21,16 +21,22 @@ class Educator {
     });
   }
 
+  createCollection(gid) {
+    this.guilds.set(gid, new this.client.discord.Collection());
+    return this.guilds.get(gid);
+  }
+
   isBad(content) {
     if (!this.wlist) return (0);
-    const str = content.toLowerCase().replace(/[\s+\-\=~[&\/\\|#,+()$~%.'":*?<>{}\]]+/g, '');
+    const str = content.toLowerCase().replace(/[\s+\-=~[&/|#,+()$~%.'":*?<>{}\]]+/g, '');
     return this.wlist.some(e => str.indexOf(e) !== -1);
   }
 
-  static removePunishment(educator, member, role) {
+  static removePunishment(educator, gid, member, role) {
     try {
+      const guignols = educator.guilds.get(gid);
       member.removeRole(role);
-      educator.guignols.delete(member.id);
+      if (guignols) guignols.delete(member.id);
     } catch (e) {
       if (e.code === 50013) {
         console.log(`Not enough access to remove punishment to ${member.id}`);
@@ -44,8 +50,8 @@ class Educator {
   async punish(msg) {
     const { member } = msg;
     const { guild } = msg.channel;
-    const guignol = guild.roles.find('name', 'Guignol');
-    if (!guignol) {
+    const role = guild.roles.find('name', 'Guignol');
+    if (!role) {
       console.log(`Couldn't punish ${msg.author.tag} for:\n"${msg.content}"\n (No role 'Guignol')`);
       return;
     }
@@ -54,11 +60,16 @@ class Educator {
     user.punisher = parseInt(user.punisher, 10);
     const time = (user.punisher === 0) ? 2 : user.punisher * 2;
     try {
-      await member.addRole(guignol);
+      await member.addRole(role);
       const date = new Date();
       date.setMinutes(date.getMinutes() + time);
-      this.client.setTimeout(this.constructor.removePunishment, (time * 60000), this, member, guignol.id);
-      this.guignols.set(member.id, date);
+      const guignols = this.guilds.get(member.guild.id) || this.createCollection(member.guild.id);
+      this.client.setTimeout(
+        this.constructor.removePunishment,
+        (time * 60000),
+        this, guild.id, member, role.id,
+      );
+      guignols.set(member.id, date);
       const row = await this.client.database.models.User.model.update(
         { punisher: time },
         { where: { uid: member.id, gid: guild.id } },
