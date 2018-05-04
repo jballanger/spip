@@ -22,7 +22,7 @@ class Educator {
 
   isBad(content) {
     if (!this.wlist) return (0);
-    const str = content.toLowerCase().replace(/\s+/g, '');
+    const str = content.toLowerCase().replace(/[\s+\-\=~[&\/\\|#,+()$~%.'":*?<>{}\]]+/g, '');
     return this.wlist.some(e => str.indexOf(e) !== -1);
   }
 
