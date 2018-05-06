@@ -1,5 +1,3 @@
-const chalk = require('chalk');
-
 class Stats {
   constructor(client) {
     this.client = client;
@@ -17,6 +15,10 @@ class Stats {
 
   getExpPercent(level, exp) {
     return Math.round((exp / this.constructor.formula(level + 1)) * 100);
+  }
+
+  getNextLevelExp(level) {
+    return this.constructor.formula(level + 1);
   }
 
   async updateStats(msg) {
@@ -75,7 +77,7 @@ class Stats {
 
   updateLadder() {
     if (!this.client.database.use) {
-      return (console.log(chalk.yellow('Not updating ladder (Database not used)')));
+      return console.log('Not updating ladder (Database not used)');
     }
     this.channels.forEach(async (channel) => {
       const channelUsers = await this.client.database.getAllUsers(channel.guild.id);
@@ -88,8 +90,11 @@ class Stats {
       let ladderContent = '```xl\n';
       await usersStat.forEach((stats, i) => {
         const user = channelUsers.filter(u => u.dataValues.uid === stats.uid)[0];
-        const percent = this.getExpPercent(stats.level, stats.exp);
-        ladderContent += `#${i + 1} \u27A4 ${user.dataValues.username} - Level ${stats.level} (${percent}%)\n`;
+        const guildUser = channel.members.get(user.dataValues.uid);
+        if (guildUser) {
+          const percent = this.getExpPercent(stats.level, stats.exp);
+          ladderContent += `#${i + 1} \u27A4 ${guildUser.user.username} - Level ${stats.level} (${percent}%)\n`;
+        }
       });
       ladderContent += '```\n';
       ladderContent += `Next update at ${this.client.utils.getHours(next)}:${this.client.utils.getMinutes(next)}`;
@@ -97,7 +102,7 @@ class Stats {
       if (message && message.author.id === this.client.user.id) message.edit(ladderContent);
       else channel.send(ladderContent);
     });
-    return (console.log(chalk.blue('Ladder updated for every channels !')));
+    return console.log('Ladder updated for every channels !');
   }
 
   refreshLadder() {

@@ -1,4 +1,3 @@
-const chalk = require('chalk');
 const htmlToText = require('html-to-text');
 
 exports.run = async (bot, msg, args) => {
@@ -21,7 +20,7 @@ exports.run = async (bot, msg, args) => {
     .addField('Start date', anime.start_date, true)
     .addField('End date', anime.end_date === '0000-00-00' ? 'Unknow' : anime.end_date, true)
     .addField('Synopsis', `${synopsis.substr(0, 500)}${synopsis.length > 500 ? '[...]' : ''}`);
-  await msg.channel.send({ embed });
+  return msg.channel.send({ embed });
 };
 
 exports.info = {

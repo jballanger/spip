@@ -17,7 +17,7 @@ class StatsModel {
       rank: {
         type: this.Sequelize.INTEGER,
         allowNull: false,
-        defaultValue: 9999999,
+        defaultValue: 1000,
       },
       level: {
         type: this.Sequelize.INTEGER,

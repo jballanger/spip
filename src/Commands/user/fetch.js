@@ -16,13 +16,13 @@ exports.run = async (bot, msg, args) => {
     .addField('Status', member.presence.status, true)
     .addField('Game', member.presence.status.game ? member.presence.status.game.name : 'Not playing', true)
     .addField('Level', userStats.level, true)
-    // .addField('Exp', `${userStats.exp}/${bot.Stats.formula(userStats.level + 1)}`, true)
+    .addField('Exp', `${userStats.exp}/${bot.stats.getNextLevelExp(userStats.level)}`, true)
     .addField('Points', userStats.points, true)
     .addField('Rank', userStats.rank, true)
     .addField('Created at', dateFormat(member.user.createdAt), true)
     .addField('Joined at', dateFormat(member.joinedAt), true)
     .addField('Roles', member.roles.filter(r => r.name !== '@everyone').map(r => r.name).join(', ') || 'None');
-  await msg.channel.send({ embed });
+  return msg.channel.send({ embed });
 };
 
 exports.info = {

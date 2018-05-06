@@ -1,22 +1,36 @@
 const fetch = require('node-fetch');
 const Canvas = require('canvas');
+const fs = Promise.promisifyAll(require('fs'));
 
 const { Image } = Canvas;
 
 exports.randomColor = () => Math.floor(Math.random() * (0xFFFFFF + 1));
 
-exports.randomNumber = (min, max) => Math.floor(Math.random() * ((max - min) + min));
+exports.randomNumber = (min, max) => (Math.floor(Math.random() * (max - min)) + min);
 
-exports.loadImageUrl = (...urls) => new Promise((resolve, reject) => {
-  const images = urls.map(async (url) => {
-    if (!url) return null;
-    const img = new Image();
-    const res = await fetch(url).catch(err => reject(err));
+exports.loadImageUrl = url => new Promise(async (resolve, reject) => {
+  if (!url) return null;
+  const img = new Image();
+  try {
+    const res = await fetch(url);
     const buffer = await res.buffer();
     img.src = Buffer.alloc(buffer.length, buffer, 'base64');
-    return img;
-  });
-  Promise.all(images).then(bufferedImages => resolve(bufferedImages));
+  } catch (e) {
+    return reject(e);
+  }
+  return resolve(img);
+});
+
+exports.loadImage = path => new Promise(async (resolve, reject) => {
+  if (!path) return null;
+  const img = new Image();
+  try {
+    const buffer = await fs.readFileAsync(`${process.cwd()}/${path}`);
+    img.src = Buffer.alloc(buffer.length, buffer, 'base64');
+  } catch (e) {
+    return reject(e);
+  }
+  return resolve(img);
 });
 
 exports.uploadImage = (url, uid) => new Promise((resolve, reject) => {

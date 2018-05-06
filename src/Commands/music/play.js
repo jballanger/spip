@@ -1,4 +1,4 @@
-exports.run = (bot, msg, args) => {
+exports.run = async (bot, msg, args) => {
   let url = args[0];
   if (!url) return msg.reply('Invalid url.');
   url = args.join(' ').replace('<', '').replace('>', '');
@@ -7,15 +7,13 @@ exports.run = (bot, msg, args) => {
   const permissions = voiceChannel.permissionsFor(bot.user);
   if (!permissions.has('CONNECT')) return msg.reply('I don\'t have permissions to join your voice channel.');
   if (!permissions.has('SPEAK')) return msg.reply('I don\'t have permissions to speak in your voice channel.');
-  voiceChannel.join().then((connection) => {
-    const data = {
-      url,
-      msg,
-      connection,
-      guildId: msg.channel.guild.id,
-      textChannel: msg.channel,
-    };
-    bot.musicManager.addSong(data);
+  const connection = await voiceChannel.join();
+  return bot.musicManager.addSong({
+    url,
+    msg,
+    connection,
+    guildId: msg.channel.guild.id,
+    textChannel: msg.channel,
   });
 };
 

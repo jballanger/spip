@@ -20,6 +20,7 @@ exports.run = async (bot, msg, args) => {
     if (row[0] < 1) throw new Error(`${row[0]} rows were affected on ${user.uid}'s background update.`);
     else msg.reply('Background successfully set !');
   });
+  return false;
 };
 
 exports.info = {

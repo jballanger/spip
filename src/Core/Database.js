@@ -1,4 +1,3 @@
-const chalk = require('chalk');
 const Sequelize = require('sequelize');
 const models = require('./Models');
 
@@ -23,18 +22,18 @@ class Database {
   async authenticate() {
     try {
       if (this.use) {
-        console.log(chalk.yellow('Connecting to database..'));
+        console.log('Connecting to database..');
         await this.sequelize.authenticate();
-        console.log(chalk.blue('Connected to database !'));
-        console.log(chalk.yellow('Loading models..'));
+        console.log('Connected to database !');
+        console.log('Loading models..');
         await this.loadModels();
-        console.log(chalk.blue(`${Object.keys(this.models).length || '0'} models loaded !`));
+        console.log(`${Object.keys(this.models).length || '0'} models loaded !`);
       } else {
-        console.log(chalk.yellow('Not connecting to the database (Database informations missing in config)'));
+        console.log('Not connecting to the database (Database informations missing in config)');
       }
       return (1);
     } catch (err) {
-      console.error(chalk.red(`Failed to connect to the database, retrying in 5 seconds..\n${err}`));
+      console.error(`Failed to connect to the database, retrying in 5 seconds..\n${err}`);
       await this.constructor.sleep(5000);
       return (this.authenticate());
     }
@@ -53,9 +52,6 @@ class Database {
         where: {
           gid,
           uid: user.id,
-        },
-        defaults: {
-          username: user.username,
         },
       }).spread(async (u, created) => {
         if (created) await this.initUserStats(user.id);

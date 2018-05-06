@@ -1,11 +1,11 @@
 {
   "name": "spip",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "Discord bot",
   "main": "index.js",
   "scripts": {
     "start": "node src/index.js",
-    "lint": "eslint src/**/*.js ; exit 0"
+    "lint": "eslint . --ext .js ; exit 0"
   },
   "engines": {
     "node": ">=8.0.0"
@@ -22,8 +22,7 @@
   "dependencies": {
     "bluebird": "^3.5.1",
     "canvas": "^2.0.0-alpha.12",
-    "chalk": "^2.4.1",
-    "chinmei": "^1.2.1",
+    "chinmei": "^1.2.2",
     "dateformat": "^3.0.3",
     "discord.js": "^11.3.2",
     "erlpack": "github:discordapp/erlpack",
@@ -35,7 +34,7 @@
     "readdir-recursive": "0.0.4",
     "require-stack": "1.0.2",
     "sequelize": "^4.37.6",
-    "simple-youtube-api": "^5.0.1",
+    "simple-youtube-api": "^5.0.2",
     "sodium": "^2.0.3",
     "uws": "^9.148.0",
     "ytdl-core": "^0.20.2"

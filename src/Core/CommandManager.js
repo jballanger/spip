@@ -1,4 +1,3 @@
-const chalk = require('chalk');
 const path = require('path');
 
 class CommandManager {
@@ -11,9 +10,9 @@ class CommandManager {
 
   async init(bot) {
     this.bot = bot;
-    console.log(chalk.yellow('Loading commands..'));
+    console.log('Loading commands..');
     await this.loadCommands();
-    console.log(chalk.blue(`${this.commands.length} commands loaded !`));
+    console.log(`${this.commands.length} commands loaded !`);
     await this.listCommands();
   }
 
@@ -88,7 +87,7 @@ class CommandManager {
     const error = this.constructor.validate(command);
 
     if (error) {
-      return console.error(chalk.yellow(`Failed to load ${name}: ${error}`));
+      return console.error(`Failed to load ${name}: ${error}`);
     }
     return (this.commands.push(command));
   }
