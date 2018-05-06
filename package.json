@@ -34,7 +34,7 @@
     "readdir-recursive": "0.0.4",
     "require-stack": "1.0.2",
     "sequelize": "^4.37.6",
-    "simple-youtube-api": "^5.0.1",
+    "simple-youtube-api": "^5.0.2",
     "sodium": "^2.0.3",
     "uws": "^9.148.0",
     "ytdl-core": "^0.20.2"
