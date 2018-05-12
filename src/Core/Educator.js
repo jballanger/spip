@@ -15,8 +15,10 @@ class Educator {
         console.log('Educator initiated !');
         resolve();
       } catch (e) {
-        if (e.code === 'ENOENT') console.log('Not using Educator (wlist not found)');
-        else reject(e);
+        if (e.code === 'ENOENT') {
+          console.log('Not using Educator (wlist not found)');
+          resolve();
+        } else reject(e);
       }
     });
   }
