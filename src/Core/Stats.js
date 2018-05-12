@@ -77,7 +77,7 @@ class Stats {
 
   updateLadder() {
     if (!this.client.database.use) {
-      return console.log('Not updating ladder (Database not used)');
+      return;
     }
     this.channels.forEach(async (channel) => {
       const channelUsers = await this.client.database.getAllUsers(channel.guild.id);
@@ -102,7 +102,6 @@ class Stats {
       if (message && message.author.id === this.client.user.id) message.edit(ladderContent);
       else channel.send(ladderContent);
     });
-    return console.log('Ladder updated for every channels !');
   }
 
   refreshLadder() {
