@@ -30,7 +30,7 @@ class MusicManager {
     }
   }
 
-  checkQueue(queue, gid) {
+  async checkQueue(queue, gid) {
     if (queue.size < 1) {
       this.leaveTimeout.set(
         gid,
@@ -41,21 +41,20 @@ class MusicManager {
     const timeout = this.leaveTimeout.get(gid);
     if (timeout) this.client.clearTimeout(timeout);
     const data = queue.first();
-    this.youtube.getVideo(data.url).then((video) => {
+    try {
+      const video = await this.youtube.getVideo(data.url);
       this.play(video, data, queue);
-    }).catch(() => {
-      this.youtube.searchVideos(data.url, 1).then((videos) => {
-        this.youtube.getVideoByID(videos[0].id).then((video) => {
-          this.play(video, data, queue);
-        }).catch(() => {
-          data.msg.reply(`Couldn't obtain the search result video's details for *${data.url}*.`);
-          this.rearrange(queue, gid);
-        });
-      }).catch(() => {
+    } catch (e) {
+      const search = await this.youtube.searchVideos(data.url, 1);
+      if (search.length > 0) {
+        const video = await this.youtube.getVideoByID(search[0].id);
+        this.play(video, data, queue);
+      } else {
         data.msg.reply(`There were no search results for *${data.url}*.`);
         this.rearrange(queue, gid);
-      });
-    });
+      }
+    }
+    this.voiceChannels.set(data.guildId, data.connection.channel);
   }
 
   play(video, data, queue) {
@@ -79,7 +78,6 @@ class MusicManager {
         this.rearrange(queue, data.guildId);
       });
     dispatcher.setVolumeLogarithmic(this.volume.get(data.guildId) / 5);
-    this.voiceChannels.set(data.guildId, data.connection.channel);
     this.dispatcher.set(data.guildId, dispatcher);
   }
 
