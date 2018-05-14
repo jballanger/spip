@@ -1,6 +1,6 @@
 {
   "name": "spip",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Discord bot",
   "main": "index.js",
   "scripts": {
@@ -30,14 +30,14 @@
     "html-to-text": "^4.0.0",
     "mysql2": "^1.5.3",
     "node-fetch": "^2.1.2",
-    "node-opus": "^0.2.7",
+    "node-opus": "^0.3.0",
     "readdir-recursive": "0.0.4",
     "require-stack": "1.0.2",
-    "sequelize": "^4.37.6",
+    "sequelize": "^4.37.7",
     "simple-youtube-api": "^5.0.2",
     "sodium": "^2.0.3",
-    "uws": "^9.148.0",
-    "ytdl-core": "^0.20.2"
+    "uws": "^10.148.0",
+    "ytdl-core": "^0.20.4"
   },
   "devDependencies": {
     "eslint": "^4.19.1",
