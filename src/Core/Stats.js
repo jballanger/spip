@@ -10,7 +10,7 @@ class Stats {
   static formula(level) {
     if (level === 0) return (21);
     if (level === 1) return (60);
-    return (60 * (level ^ 1.6)); // eslint-disable-line no-bitwise
+    return (60 * (level ** 1.6));
   }
 
   getExpPercent(level, exp) {
