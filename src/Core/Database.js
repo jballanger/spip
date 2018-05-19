@@ -3,7 +3,6 @@ const models = require('./Models');
 
 class Database {
   constructor() {
-    this.use = _config.database.mysql.host;
     this.sequelize = new Sequelize(
       _config.database.mysql.database,
       _config.database.mysql.user,
@@ -17,23 +16,24 @@ class Database {
         },
       },
     );
+    this.connectRetry = 0;
   }
 
   async authenticate() {
     try {
-      if (this.use) {
-        console.log('Connecting to database..');
-        await this.sequelize.authenticate();
-        console.log('Connected to database !');
-        console.log('Loading models..');
-        await this.loadModels();
-        console.log(`${Object.keys(this.models).length || '0'} models loaded !`);
-      } else {
-        console.log('Not connecting to the database (Database informations missing in config)');
-      }
+      console.log('Connecting to the database..');
+      await this.sequelize.authenticate();
+      console.log('Connected !');
+      console.log('Loading models..');
+      await this.loadModels();
+      console.log(`${Object.keys(this.models).length || '0'} models loaded !`);
       return (1);
     } catch (err) {
-      console.error(`Failed to connect to the database, retrying in 5 seconds..\n${err}`);
+      if (this.connectRetry > 4) {
+        throw new Error(`Failed to connect to the database ${this.connectRetry} times, exiting..`);
+      }
+      this.connectRetry += 1;
+      console.error('Failed to connect to the database, retrying in 5 seconds..\n', err);
       await this.constructor.sleep(5000);
       return (this.authenticate());
     }
