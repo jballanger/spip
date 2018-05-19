@@ -28,7 +28,7 @@ exports.run = async (bot, msg) => {
   ctx.fillStyle = 'white';
   ctx.fillRect(100, 40, 206, 10);
   ctx.fillStyle = 'grey';
-  ctx.fillRect(102, 42, (parseInt(userStat.exp, 10) / 100) * 202, 6);
+  ctx.fillRect(102, 42, (parseInt(userStat.expPercent, 10) / 100) * 202, 6);
   ctx.beginPath();
   ctx.moveTo(160, 55);
   ctx.lineTo(160, 105);
@@ -46,7 +46,7 @@ exports.run = async (bot, msg) => {
   ctx.fillText(`#${userStat.rank}`, 270, 75);
   ctx.fillText(userStat.points, 270, 95);
   ctx.font = '10px "Open Sans"';
-  ctx.fillText(`${userStat.exp}%`, 310, 48);
+  ctx.fillText(`${userStat.expPercent}%`, 310, 48);
   ctx.globalAlpha = 1;
   ctx.drawImage(badge, 310, 10, 24, 24);
   ctx.drawImage(avatar, 22, 28, 64, 64);
