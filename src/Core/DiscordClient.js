@@ -1,6 +1,7 @@
-const core = require('./index.js');
 const DiscordJs = require('discord.js');
 const Chinmei = require('chinmei');
+const core = require('./index.js');
+const DataStore = require('./Data');
 
 class DiscordClient extends DiscordJs.Client {
   constructor() {
@@ -28,6 +29,10 @@ class DiscordClient extends DiscordJs.Client {
     await this.hfeed.init();
     await this.stats.updateLadder();
     this.registerEvents();
+    DataStore(DiscordJs, this.database);
+    const u = this.users.find('username', 'julien');
+    const d = await u.data.get();
+    console.log(d);
   }
 
   registerEvents() {
