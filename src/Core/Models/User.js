@@ -5,21 +5,23 @@ class UserModel {
     this.Sequelize = sequelize;
     this.model = db.define('user', {
       id: {
-        type: this.Sequelize.INTEGER,
+        type: this.Sequelize.BIGINT,
         unique: true,
         primaryKey: true,
-        autoIncrement: true,
-      },
-      gid: {
-        type: this.Sequelize.TEXT,
         allowNull: false,
       },
-      uid: {
-        type: this.Sequelize.TEXT,
+      exp: {
+        type: this.Sequelize.BIGINT,
         allowNull: false,
+        defaultValue: 0,
+      },
+      points: {
+        type: this.Sequelize.BIGINT,
+        allowNull: false,
+        defaultValue: 0,
       },
       punisher: {
-        type: this.Sequelize.INTEGER,
+        type: this.Sequelize.BIGINT,
         allowNull: false,
         defaultValue: 0,
       },
