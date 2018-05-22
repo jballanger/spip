@@ -30,9 +30,6 @@ class DiscordClient extends DiscordJs.Client {
     await this.stats.updateLadder();
     this.registerEvents();
     DataStore(DiscordJs, this.database);
-    const u = this.users.find('username', 'julien');
-    const d = await u.data.get();
-    console.log(d);
   }
 
   registerEvents() {
