@@ -8,7 +8,6 @@ class UserData {
     return new Promise((resolve) => {
       if (this.userData) resolve(this.userData);
       else {
-        console.log('query');
         this.database.models.User.findOrCreate({
           where: {
             id: this.id,
