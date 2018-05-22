@@ -1,5 +1,3 @@
-// const { Collection } = require('discord.js');
-
 class UserData {
   constructor(user, database) {
     this.id = parseInt(user.id, 10);
@@ -8,11 +6,32 @@ class UserData {
 
   get() {
     return new Promise((resolve) => {
-      this.database.models.User.model.findOrCreate({
-        where: {
-          id: this.id,
-        },
-      }).spread(u => resolve(u.dataValues));
+      if (this.userData) resolve(this.userData);
+      else {
+        console.log('query');
+        this.database.models.User.findOrCreate({
+          where: {
+            id: this.id,
+          },
+        }).spread(({ dataValues }) => {
+          this.userData = dataValues;
+          resolve(dataValues);
+        });
+      }
+    });
+  }
+
+  save() {
+    return new Promise((resolve) => {
+      if (!this.userData) throw new Error('User wasn\'t get(ed) before using save().');
+      this.database.models.User.update(
+        this.userData,
+        { where: { id: this.userData.id } },
+      ).then((row) => {
+        const rowCount = row[0];
+        if (rowCount < 1) console.log(`${rowCount} row were updated when saving the User`, this.userData);
+        else resolve();
+      });
     });
   }
 }
