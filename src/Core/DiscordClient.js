@@ -8,7 +8,7 @@ class DiscordClient extends DiscordJs.Client {
     super();
     this.login(_config.discord.token);
     this.discord = DiscordJs;
-    this.hfeed = new core.HinataFeed();
+    this.hfeed = new core.HinataFeed(this);
     this.database = new core.Database();
     this.educator = new core.Educator(this);
     this.importManager = new core.ImportManager(__dirname);
@@ -45,23 +45,12 @@ class DiscordClient extends DiscordJs.Client {
       this.commands.handleCommand(msg, msg.content);
     });
     this.on('messageDelete', msg => this.deleted.set(msg.id, msg));
-    this.hfeed.on('update', (data, i) => {
-      this.hfeed.channels.forEach((channel) => {
-        const embed = new this.discord.RichEmbed()
-          .setTitle(data.title)
-          .setDescription(this.hfeed.messages[i])
-          .setURL(data.link)
-          .setColor(this.utils.randomColor());
-        channel.send({ embed });
-      });
-    });
     setInterval(() => {
       this.refreshBotChannels();
     }, 60000);
   }
 
   refreshBotChannels() {
-    this.hfeed.channels = this.channels.findAll('name', _config.hinata_feed.channel);
     this.stats.channels = this.channels.findAll('name', 'ladder');
     this.commands.channels = this.channels.findAll('name', 'spip');
   }
