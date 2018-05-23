@@ -1,12 +1,9 @@
 const fetch = require('node-fetch');
-const EventEmitter = require('eventemitter3');
 
-class HinataFeed extends EventEmitter {
-  constructor() {
-    super();
+class HinataFeed {
+  constructor(client) {
+    this.client = client;
     this.source = 'https://hinata-online-community.fr/wp-content/themes/hinata_v6/bot.json';
-    this.feed = {};
-    this.channels = [];
     this.messages = [
       'Nouvelle page d\'accueil !',
       '',
@@ -17,13 +14,24 @@ class HinataFeed extends EventEmitter {
   }
 
   async init() {
-    await this.getFeed().then((feed) => {
-      this.feed = feed;
-      this.watchFeed();
-      console.log('HinataFeed initiated !');
-    }).catch((e) => {
-      throw e;
+    this.feed = await this.getFeed();
+    this.channels = this.initChannels();
+    setInterval(this.watchFeed, 30000);
+    console.log('HinataFeed initiated !');
+  }
+
+  async initChannels() {
+    const channels = [];
+    const { guilds } = this.client;
+    guilds.forEach(async (guild) => {
+      const guildData = await guild.data.get();
+      const { settings } = guildData;
+      if (settings.hinataFeed) {
+        const { channel } = settings.hinataFeed;
+        if (channel) channels.push(channel);
+      }
     });
+    return channels;
   }
 
   getFeed() {
@@ -37,19 +45,28 @@ class HinataFeed extends EventEmitter {
     });
   }
 
-  watchFeed() {
-    setInterval(() => {
-      this.getFeed().then((feed) => {
-        Object.keys(feed).forEach((k, v) => {
-          if (this.feed[k].title !== feed[k].title) {
-            this.emit('update', feed[k], v);
-            this.feed[k] = feed[k];
-          }
-        });
-      }).catch((e) => {
-        throw e;
-      });
-    }, 2000);
+  async watchFeed() {
+    const feed = await this.getFeed();
+    Object.keys(feed).forEach((key, value) => {
+      if (this.feed[key] !== feed[key]) {
+        this.update(key, value);
+        this.feed[key] = feed[key];
+      }
+    });
+  }
+
+  update(type, data) {
+    this.channels.forEach((channelId) => {
+      const channel = this.client.channels.get(channelId);
+      if (channel) {
+        const embed = new this.discord.RichEmbed()
+          .setTitle(data.title)
+          .setDescription(this.hfeed.messages[type])
+          .setURL(data.link)
+          .setColor(this.client.utils.randomColor());
+        channel.send({ embed });
+      }
+    });
   }
 }
 
