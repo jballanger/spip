@@ -25,7 +25,7 @@ class GuildData {
       if (!this.guildData) throw new Error('Guild wasn\'t get(ed) before using save().');
       this.database.models.Guild.update(
         this.guildData,
-        { where: { id: this.GuildData.id } },
+        { where: { id: this.guildData.id } },
       ).then((row) => {
         const rowCount = row[0];
         if (rowCount < 1) console.log(`${rowCount} row were updated when saving the Guild`, this.guildData);
