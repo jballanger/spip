@@ -1,7 +1,9 @@
 const fetch = require('node-fetch');
+const Feature = require('./Feature');
 
-class HinataFeed {
+class HinataFeed extends Feature {
   constructor(client) {
+    super(client);
     this.client = client;
     this.source = 'https://hinata-online-community.fr/wp-content/themes/hinata_v6/bot.json';
     this.messages = [
@@ -16,7 +18,7 @@ class HinataFeed {
   async init() {
     this.feed = await this.getFeed();
     this.channels = this.initChannels();
-    setInterval(this.watchFeed, 30000);
+    // setInterval(this.watchFeed, 30000);
     console.log('HinataFeed initiated !');
   }
 
@@ -67,6 +69,18 @@ class HinataFeed {
         channel.send({ embed });
       }
     });
+  }
+
+  settings(options) {
+    const settings = {};
+    if (options.channel && typeof options.channel === 'string') {
+      const channelPattern = this.client.discord.MessageMentions.CHANNELS_PATTERN;
+      const channel = this.client.utils.mtoi(channelPattern, options.channel);
+      if (!channel) return null;
+      settings.channel = channel;
+    }
+    if (!settings.channel) return null;
+    return settings;
   }
 }
 
