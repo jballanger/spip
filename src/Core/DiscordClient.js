@@ -8,7 +8,8 @@ class DiscordClient extends DiscordJs.Client {
     super();
     this.login(_config.discord.token);
     this.discord = DiscordJs;
-    this.hfeed = new core.HinataFeed(this);
+    this.features = [];
+    this.HinataFeed = new core.HinataFeed(this);
     this.database = new core.Database();
     this.educator = new core.Educator(this);
     this.importManager = new core.ImportManager(__dirname);
@@ -21,15 +22,15 @@ class DiscordClient extends DiscordJs.Client {
   }
 
   async init() {
+    DataStore(DiscordJs, this.database);
     this.user.setActivity(_config.discord.game);
     await this.database.authenticate();
     await this.refreshBotChannels();
     await this.commands.init(this);
     await this.educator.loadList(_config.educator.wlist);
-    await this.hfeed.init();
+    await this.HinataFeed.init();
     await this.stats.updateLadder();
     this.registerEvents();
-    DataStore(DiscordJs, this.database);
   }
 
   registerEvents() {
