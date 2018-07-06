@@ -12,7 +12,7 @@ class GuildModel {
       },
       settings: {
         type: this.Sequelize.JSON,
-        allowNull: false,
+        defaultValue: {},
       },
       joinedAt: this.Sequelize.DATE,
       createdAt: this.Sequelize.DATE,
