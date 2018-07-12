@@ -4,15 +4,15 @@ const { registerFont, createCanvas } = require('canvas');
 registerFont(path.resolve(__dirname, '../../Misc/OpenSans-Regular.ttf'), { family: 'Open Sans' });
 
 exports.run = async (bot, msg) => {
-  if (!bot.database.use) return msg.reply('This command is actually unavailable');
-  const userProfile = msg.mentions.users.size > 0 ? msg.mentions.users.first() : msg.author;
-  const user = await bot.database.getUser(userProfile, msg.channel.guild.id);
-  const userStat = await bot.database.getUserStats(user.uid);
-  userStat.expPercent = bot.stats.getExpPercent(userStat.level, userStat.exp);
+  const user = msg.mentions.users.size > 0 ? msg.mentions.users.first() : msg.author;
+  const userData = await user.data.get();
+  const userLevel = bot.stats.getLevel(userData.exp);
+  const userPercent = bot.stats.getPercent(userLevel, userData.exp);
+  const userRank = bot.stats.getRank(msg.guild.id, user.id);
   const [background, badge, avatar] = await Promise.all([
     bot.utils.loadImage(`src/Misc/profile/background${bot.utils.randomNumber(1, 5)}.png`),
     bot.utils.loadImage(`src/Misc/profile/badge${bot.utils.randomNumber(1, 8)}.png`),
-    bot.utils.loadImageUrl(userProfile.avatarURL || userProfile.defaultAvatarURL),
+    bot.utils.loadImageUrl(user.avatarURL || user.defaultAvatarURL),
   ]);
   const profile = createCanvas(360, 120);
   const ctx = profile.getContext('2d');
@@ -28,25 +28,25 @@ exports.run = async (bot, msg) => {
   ctx.fillStyle = 'white';
   ctx.fillRect(100, 40, 206, 10);
   ctx.fillStyle = 'grey';
-  ctx.fillRect(102, 42, (parseInt(userStat.expPercent, 10) / 100) * 202, 6);
+  ctx.fillRect(102, 42, (userPercent / 100) * 202, 6);
   ctx.beginPath();
   ctx.moveTo(160, 55);
   ctx.lineTo(160, 105);
   ctx.stroke();
   ctx.fillStyle = '#6c6c6c';
   ctx.font = '20px "Open Sans"';
-  ctx.fillText(userProfile.username, 100, 30);
+  ctx.fillText(user.username, 100, 30);
   ctx.font = '20px "Open Sans"';
   ctx.fillText('LEVEL', 100, 70);
   ctx.font = '30px "Open Sans"';
-  ctx.fillText(userStat.level, (130 - (userStat.level.toString().length * 10)), 100);
+  ctx.fillText(userLevel, (130 - (userLevel.toString().length * 10)), 100);
   ctx.font = '15px "Open Sans"';
   ctx.fillText('Server Rank', 170, 75);
   ctx.fillText('Points', 170, 95);
-  ctx.fillText(`#${userStat.rank}`, 270, 75);
-  ctx.fillText(userStat.points, 270, 95);
+  ctx.fillText(`#${userRank}`, 270, 75);
+  ctx.fillText(userData.points, 270, 95);
   ctx.font = '10px "Open Sans"';
-  ctx.fillText(`${userStat.expPercent}%`, 310, 48);
+  ctx.fillText(`${userPercent}%`, 310, 48);
   ctx.globalAlpha = 1;
   ctx.drawImage(badge, 310, 10, 24, 24);
   ctx.drawImage(avatar, 22, 28, 64, 64);
@@ -54,7 +54,7 @@ exports.run = async (bot, msg) => {
   return msg.channel.send({
     file: {
       attachment: result,
-      name: `${userProfile.username}.png`,
+      name: `${user.username}.png`,
     },
   });
 };
