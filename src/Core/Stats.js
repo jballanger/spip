@@ -67,8 +67,14 @@ class Stats {
     if (msg.content.length < 3) return;
     if (this.users[user.id] && (now - this.users[user.id]) < 120000) return;
     const userData = await user.data.get();
+    const level = this.getLevel(userData.exp);
     userData.exp += this.client.utils.randomNumber(4, 9);
     userData.exp += (mentions.channels.size + mentions.members.size + mentions.roles.size) * 2;
+    const newLevel = this.getLevel(userData.exp);
+    if (newLevel > level) {
+      userData.points += this.client.utils.randomNumber(newLevel, newLevel * 2);
+      msg.channel.send(`**${user.username}** is now level ${newLevel} !`);
+    }
     user.data.save();
     this.users[user.id] = new Date();
   }
