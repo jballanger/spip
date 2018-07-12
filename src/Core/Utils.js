@@ -76,3 +76,5 @@ exports.getMinutes = (date) => {
   const m = date.getMinutes();
   return (m < 10 ? `0${m}` : m);
 };
+
+exports.ucfirst = (s => s.charAt(0).toUpperCase() + s.substr(1));

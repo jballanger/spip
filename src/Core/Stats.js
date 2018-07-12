@@ -1,122 +1,76 @@
 class Stats {
   constructor(client) {
     this.client = client;
-    this.users = [];
-    this.channels = [];
-    this.refreshUsers();
-    this.refreshLadder();
+    this.users = {};
+    this.guilds = {};
+    this.exponent = 1.7;
+    this.baseExp = 60;
   }
 
-  static formula(level) {
-    if (level === 0) return (21);
-    if (level === 1) return (60);
-    return (60 * (level ** 1.6));
+  getLevel(exp) {
+    return (Math.floor((exp / this.baseExp) ** (1 / this.exponent)));
   }
 
-  getExpPercent(level, exp) {
-    return Math.round((exp / this.constructor.formula(level + 1)) * 100);
+  getLevelExp(level) {
+    return (Math.round(this.baseExp * (level ** this.exponent)));
   }
 
-  getNextLevelExp(level) {
-    return this.constructor.formula(level + 1);
+  getPercent(level, exp) {
+    const levelExp = this.getLevelExp(level);
+    const nextLevelExp = this.getLevelExp(level + 1);
+    return (Math.round(((exp - levelExp) * 100) / (nextLevelExp - levelExp)));
   }
 
-  async updateStats(msg) {
-    if (this.users[`${msg.channel.guild.id}${msg.author.id}`]) return;
-    if (msg.content.length < 3) return;
-    await this.client.database.getUser(msg.author, msg.channel.guild.id);
-    const user = await this.client.database.getUserStats(msg.author.id);
-    let exp = parseInt(user.exp, 10);
-    let points = parseInt(user.points, 10);
-    let level = parseInt(user.level, 10);
-    exp += this.client.utils.randomNumber(4, 9);
-    exp += (msg.mentions.channels.size + msg.mentions.roles.size + msg.mentions.users.size) * 2;
-    const nextLevelExp = this.constructor.formula(level + 1);
-    if (exp >= nextLevelExp) {
-      const plus = exp - nextLevelExp;
-      exp = 0;
-      if (plus > 0) exp = plus;
-      level += 1;
-      points += this.client.utils.randomNumber(level, level * 2);
-      this.client.database.models.Stats.model.update({
-        level,
-        exp,
-        points,
-      }, {
-        where: {
-          uid: user.uid,
-        },
-      }).then((row) => {
-        if (row[0] < 1) throw new Error(`${row[0]} rows were affected for uid ${user.uid}`);
+  getRank(guildId, userId) {
+    const guild = this.guilds[guildId];
+    if (!guild) return (0);
+    const rank = guild.findIndex(member => member.id === userId) + 1;
+    return (rank);
+  }
+
+  async init() {
+    await this.update();
+    setInterval(this.update.bind(this), 1800000);
+  }
+
+  async update() {
+    await this.updateGuilds();
+    this.sortGuilds();
+  }
+
+  async updateGuilds() {
+    const guildsMap = this.client.guilds.map(async (guild) => {
+      this.guilds[guild.id] = [];
+      const membersMap = guild.members.map(async (member) => {
+        const userData = await member.user.data.get();
+        this.guilds[guild.id].push({
+          id: member.id,
+          exp: userData.exp,
+        });
       });
-    } else {
-      this.client.database.models.Stats.model.update({
-        exp,
-      }, {
-        where: {
-          uid: user.uid,
-        },
-      }).then((row) => {
-        if (row[0] < 1) throw new Error(`${row[0]} rows were affected for uid ${user.uid}`);
-      });
-    }
-    this.users[`${msg.channel.guild.id}${msg.author.id}`] = new Date();
+      await Promise.all(membersMap);
+    });
+    await Promise.all(guildsMap);
   }
 
-  static sortLadder(a, b) {
-    const aLevel = a.dataValues.level;
-    const bLevel = b.dataValues.level;
-    const aExp = a.dataValues.exp;
-    const bExp = b.dataValues.exp;
-    if (aLevel < bLevel) return (1);
-    if (aLevel > bLevel) return (-1);
-    if (aLevel === bLevel && aExp < bExp) return (1);
-    else if (aLevel === bLevel) return (-1);
-    return (0);
-  }
-
-  updateLadder() {
-    if (!this.client.database.use) {
-      return;
-    }
-    this.channels.forEach(async (channel) => {
-      const channelUsers = await this.client.database.getAllUsers(channel.guild.id);
-      const channelUsersUid = channelUsers.map(u => u.uid);
-      const usersStat = await this.client.database.getAllUsersStat(channelUsersUid);
-      usersStat.sort(this.constructor.sortLadder);
-      usersStat.map((u, i) => this.client.database.updateRank(u.uid, i + 1));
-      const next = new Date();
-      next.setMinutes(next.getMinutes() + 30);
-      let ladderContent = '```xl\n';
-      await usersStat.forEach((stats, i) => {
-        const user = channelUsers.filter(u => u.dataValues.uid === stats.uid)[0];
-        const guildUser = channel.members.get(user.dataValues.uid);
-        if (guildUser) {
-          const percent = this.getExpPercent(stats.level, stats.exp);
-          ladderContent += `#${i + 1} \u27A4 ${guildUser.user.username} - Level ${stats.level} (${percent}%)\n`;
-        }
-      });
-      ladderContent += '```\n';
-      ladderContent += `Next update at ${this.client.utils.getHours(next)}:${this.client.utils.getMinutes(next)}`;
-      const message = (await channel.fetchMessages({ limit: 1 })).first();
-      if (message && message.author.id === this.client.user.id) message.edit(ladderContent);
-      else channel.send(ladderContent);
+  sortGuilds() {
+    Object.keys(this.guilds).forEach((key) => {
+      const guild = this.guilds[key];
+      guild.sort((a, b) => a.exp < b.exp);
     });
   }
 
-  refreshLadder() {
-    setInterval(() => {
-      this.updateLadder();
-    }, 1800000);
-  }
-
-  refreshUsers() {
-    setInterval(() => {
-      const now = new Date();
-      Object.keys(this.users).forEach((k) => {
-        if ((now - this.users[k]) >= 120000) delete this.users[k];
-      });
-    }, 5000);
+  async updateStats(msg) {
+    const { member, mentions } = msg;
+    const { user } = member;
+    const now = new Date();
+    if (msg.content.length < 3) return;
+    if (this.users[user.id] && (now - this.users[user.id]) < 120000) return;
+    const userData = await user.data.get();
+    userData.exp += this.client.utils.randomNumber(4, 9);
+    userData.exp += (mentions.channels.size + mentions.members.size + mentions.roles.size) * 2;
+    user.data.save();
+    this.users[user.id] = new Date();
   }
 }
 
