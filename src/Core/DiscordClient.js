@@ -29,7 +29,7 @@ class DiscordClient extends DiscordJs.Client {
     await this.commands.init(this);
     await this.educator.loadList(_config.educator.wlist);
     await this.HinataFeed.init();
-    await this.stats.updateLadder();
+    await this.stats.init();
     this.registerEvents();
   }
 

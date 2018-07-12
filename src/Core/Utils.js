@@ -87,3 +87,5 @@ exports.mtoi = (type, m) => {
   if (matches && matches.length > 1) return matches[1];
   return null;
 };
+
+exports.ucfirst = (s => s.charAt(0).toUpperCase() + s.substr(1));
