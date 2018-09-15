@@ -4,16 +4,15 @@ exports.run = async (bot, msg, args) => {
   const index = features.indexOf(args[0].toLowerCase());
   if (index !== -1) {
     const feature = bot.features[index];
-    const options = bot.utils.parser(args, msg.mentions);
-    const result = await bot[feature].enable(msg.guild, options);
+    const result = await bot[feature].disable(msg.guild);
     return msg.reply(result);
   }
   return msg.reply(`No feature ${args[0]} available.`);
 };
 
 exports.info = {
-  name: 'enable',
-  description: 'Enable a specific feature',
-  usage: 'enable <feature> [<options>]',
-  level: ['Admin', 'Staff'],
+  name: 'disable',
+  description: 'Disable a specific feature',
+  usage: 'disable <feature>',
+  level: ['Admin'],
 };
