@@ -1,35 +1,40 @@
 const DiscordJs = require('discord.js');
-const Chinmei = require('chinmei');
+// const Chinmei = require('chinmei');
 const core = require('./index.js');
 const DataStore = require('./Data');
 
 class DiscordClient extends DiscordJs.Client {
   constructor() {
     super();
+    this.started = 0;
     this.login(_config.discord.token);
     this.discord = DiscordJs;
-    this.hfeed = new core.HinataFeed();
+    this.features = [];
+    this.Feed = new core.Feed(this);
     this.database = new core.Database();
     this.educator = new core.Educator(this);
     this.importManager = new core.ImportManager(__dirname);
     this.commands = new core.CommandManager();
     this.utils = core.Utils;
     this.deleted = new DiscordJs.Collection();
-    this.chinmei = new Chinmei(_config.myanimelist.username, _config.myanimelist.password);
+    // this.chinmei = new Chinmei(_config.myanimelist.username, _config.myanimelist.password);
     this.stats = new core.Stats(this);
     this.musicManager = new core.MusicManager(this);
   }
 
   async init() {
+    if (this.started) return;
+    this.started = 1;
     DataStore(DiscordJs, this.database);
     this.user.setActivity(_config.discord.game);
     await this.database.authenticate();
     await this.refreshBotChannels();
     await this.commands.init(this);
     await this.educator.loadList(_config.educator.wlist);
-    await this.hfeed.init();
+    await this.Feed.init();
     await this.stats.init();
     this.registerEvents();
+    console.log(`\n${this.user.username}#${this.user.discriminator} ready !`);
   }
 
   registerEvents() {
@@ -45,23 +50,12 @@ class DiscordClient extends DiscordJs.Client {
       this.commands.handleCommand(msg, msg.content);
     });
     this.on('messageDelete', msg => this.deleted.set(msg.id, msg));
-    this.hfeed.on('update', (data, i) => {
-      this.hfeed.channels.forEach((channel) => {
-        const embed = new this.discord.RichEmbed()
-          .setTitle(data.title)
-          .setDescription(this.hfeed.messages[i])
-          .setURL(data.link)
-          .setColor(this.utils.randomColor());
-        channel.send({ embed });
-      });
-    });
     setInterval(() => {
       this.refreshBotChannels();
     }, 60000);
   }
 
   refreshBotChannels() {
-    this.hfeed.channels = this.channels.findAll('name', _config.hinata_feed.channel);
     this.stats.channels = this.channels.findAll('name', 'ladder');
     this.commands.channels = this.channels.findAll('name', 'spip');
   }

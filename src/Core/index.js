@@ -2,7 +2,7 @@ const CommandManager = require('./CommandManager');
 const Database = require('./Database');
 const DiscordClient = require('./DiscordClient');
 const Educator = require('./Educator');
-const HinataFeed = require('./HinataFeed');
+const Feed = require('./Feed');
 const ImportManager = require('./ImportManager');
 const MusicManager = require('./MusicManager');
 const Stats = require('./Stats');
@@ -13,7 +13,7 @@ module.exports = {
   Database,
   DiscordClient,
   Educator,
-  HinataFeed,
+  Feed,
   ImportManager,
   MusicManager,
   Stats,
