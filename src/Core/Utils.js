@@ -48,7 +48,7 @@ exports.uploadImage = (url, uid) => new Promise((resolve, reject) => {
   );
 });
 
-exports.parser = (args) => {
+exports.parser = (args, mentions) => {
   const options = {};
   for (let i = 0; i < args.length; i += 1) {
     if (args[i].startsWith('-')) {
@@ -56,7 +56,11 @@ exports.parser = (args) => {
       let value;
       while (i + 1 < args.length && !args[i + 1].startsWith('-')) {
         i += 1;
-        if (!value) value = args[i];
+        const strippedArg = args[i].replace(/[<#@&>]/g, '');
+        const channel = mentions.channels.get(strippedArg);
+        const user = mentions.users.get(strippedArg);
+        const role = mentions.roles.get(strippedArg);
+        if (!value) value = channel || user || role || args[i];
         else value += ` ${args[i]}`;
       }
       options[opt] = value || true;
