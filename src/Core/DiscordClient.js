@@ -1,36 +1,40 @@
 const DiscordJs = require('discord.js');
-const Chinmei = require('chinmei');
+// const Chinmei = require('chinmei');
 const core = require('./index.js');
 const DataStore = require('./Data');
 
 class DiscordClient extends DiscordJs.Client {
   constructor() {
     super();
+    this.started = 0;
     this.login(_config.discord.token);
     this.discord = DiscordJs;
     this.features = [];
-    this.HinataFeed = new core.HinataFeed(this);
+    this.Feed = new core.Feed(this);
     this.database = new core.Database();
     this.educator = new core.Educator(this);
     this.importManager = new core.ImportManager(__dirname);
     this.commands = new core.CommandManager();
     this.utils = core.Utils;
     this.deleted = new DiscordJs.Collection();
-    this.chinmei = new Chinmei(_config.myanimelist.username, _config.myanimelist.password);
+    // this.chinmei = new Chinmei(_config.myanimelist.username, _config.myanimelist.password);
     this.stats = new core.Stats(this);
     this.musicManager = new core.MusicManager(this);
   }
 
   async init() {
+    if (this.started) return;
+    this.started = 1;
     DataStore(DiscordJs, this.database);
     this.user.setActivity(_config.discord.game);
     await this.database.authenticate();
     await this.refreshBotChannels();
     await this.commands.init(this);
     await this.educator.loadList(_config.educator.wlist);
-    await this.HinataFeed.init();
+    await this.Feed.init();
     await this.stats.init();
     this.registerEvents();
+    console.log(`\n${this.user.username}#${this.user.discriminator} ready !`);
   }
 
   registerEvents() {
