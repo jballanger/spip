@@ -48,17 +48,26 @@ exports.uploadImage = (url, uid) => new Promise((resolve, reject) => {
   );
 });
 
-exports.parser = args => new Promise(async (resolve) => {
-  const options = [];
-  let tmpArgs = args;
-  if (tmpArgs.length < 1) resolve({ options, tmpArgs });
-  while (tmpArgs[0].startsWith('-')) {
-    options.push(tmpArgs[0]);
-    tmpArgs = tmpArgs.slice(1);
-    if (!tmpArgs[0].startsWith('-')) resolve({ options, args: tmpArgs });
+exports.parser = (args, mentions) => {
+  const options = {};
+  for (let i = 0; i < args.length; i += 1) {
+    if (args[i].startsWith('-')) {
+      const opt = args[i].replace(/^-+/, '');
+      let value;
+      while (i + 1 < args.length && !args[i + 1].startsWith('-')) {
+        i += 1;
+        const strippedArg = args[i].replace(/[<#@&>]/g, '');
+        const channel = mentions.channels.get(strippedArg);
+        const user = mentions.users.get(strippedArg);
+        const role = mentions.roles.get(strippedArg);
+        if (!value) value = channel || user || role || args[i];
+        else value += ` ${args[i]}`;
+      }
+      options[opt] = value || true;
+    }
   }
-  if (!tmpArgs[0].startsWith('-')) resolve({ options, args: tmpArgs });
-});
+  return options;
+};
 
 exports.validYoutubeUrl = (url) => {
   const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=|\?v=)([^#&?]*).*/;
@@ -76,3 +85,11 @@ exports.getMinutes = (date) => {
   const m = date.getMinutes();
   return (m < 10 ? `0${m}` : m);
 };
+
+exports.mtoi = (type, m) => {
+  const matches = type.exec(m);
+  if (matches && matches.length > 1) return matches[1];
+  return null;
+};
+
+exports.ucfirst = (s => s.charAt(0).toUpperCase() + s.substr(1));

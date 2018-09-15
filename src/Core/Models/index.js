@@ -1,7 +1,7 @@
 const User = require('./User');
-const Stats = require('./Stats');
+const Guild = require('./Guild');
 
 module.exports = {
   User,
-  Stats,
+  Guild,
 };

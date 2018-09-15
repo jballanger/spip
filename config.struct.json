@@ -19,9 +19,6 @@
         "username": "",
         "password": ""
     },
-    "hinata_feed": {
-        "channel": ""
-    },
     "youtube": {
         "apikey": ""
     },
